@@ -1,4 +1,14 @@
 // Variables y estado global
+import { initNavegation } from './modules/ui.js';
+import { initAuth } from './modules/auth.js';
+import { initCitas } from './modules/citas.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  initNavegation();
+  initAuth();
+  initCitas();
+});
+
 let usuarios = [];
 let sesionesUsuario = null;
 let citas = [];
@@ -179,3 +189,9 @@ document.addEventListener('DOMContentLoaded', () => {
   actualizarTablaUsuarios();
 });
 
+function showLoader() {
+    document.body.classList.add('loading');
+    setTimeout(() => {
+        document.body.classList.remove('loading');
+    }, 800);
+}

@@ -650,7 +650,17 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
  btnIngresarLogin.disabled = true;
  cambiarSeccion('inicio');
  });
+ 
+ <section id="dashboard">
+  <h2>Panel de Usuario</h2>
+  <div class="grid">
+    <button data-target="gestionCitas">Gestionar Citas</button>
+    <button data-target="solicitudDocumentos">Solicitar Documentos</button>
+    <button data-target="informes">Ver Reportes</button>
+  </div>
+</section>
 
+cambiarSeccion('dashboard');
 
  // Gestión Citas
  const operacionCita = document.getElementById('operacionCita');
