@@ -1,3 +1,6 @@
+Diferencia
+Original
+Modificado
 import { saveData, getData } from './storage.js';
 
 let usuarios = getData('usuarios');
@@ -15,14 +18,25 @@ export function initAuth() {
         const user = usuarios.find(u => u.email === email && u.password === password);
 
         if (!user) {
-            alert('Credenciales incorrectas');
+            const loginError = document.getElementById('loginError');
+            loginError.textContent = 'Credenciales incorrectas';
+            loginError.style.display = 'block';
             return;
         }
 
         sesion = user;
         localStorage.setItem('sesion', JSON.stringify(user));
-
-        mostrarDashboard(user);
+        
+        const loginSuccess = document.getElementById('loginSuccess');
+        loginSuccess.textContent = `Bienvenido ${user.nombre}`;
+        loginSuccess.style.display = 'block';
+        
+        // Simular el cambio de sección que hace el index.html
+        if (window.cambiarSeccion) {
+            window.cambiarSeccion('inicio');
+        } else {
+            mostrarDashboard(user);
+        }
     });
 }
 
@@ -41,3 +55,5 @@ window.ir = function(seccion){
     document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
     document.getElementById(seccion).classList.add('active');
 }
+
+

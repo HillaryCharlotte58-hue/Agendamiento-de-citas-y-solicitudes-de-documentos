@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HRPL SAS - PRUEBA</title>
+  <style>
+    /* Reset y base */
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background: #f9fbfd; /* muy claro, blanco-azulado */
+      color: #0f2c60; /* azul oscuro */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+    header {
+      background: #0a3a71; /* azul oscuro */
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+    }
+    nav {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    nav button, nav a {
+      background: none;
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+      text-decoration: none;
+    }
+    nav button:hover, nav a:hover, nav button.active, nav a.active {
+      background: #064075;
+    }
+    nav .dropdown {
+      position: relative;
+    }
+    nav .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background: #0a3a71;
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 150px;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    nav .dropdown-content button, nav .dropdown-content a {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.5rem 1rem;
+      white-space: nowrap;
+    }
+    nav .dropdown:hover .dropdown-content, nav .dropdown:focus-within .dropdown-content {
+      display: block;
+    }
+
+
+    main {
+      flex-grow: 1;
+      padding: 2rem 1rem 3rem 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+
+    /* Secciones ocultas */
+    section {
+      display: none;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.07);
+      margin-bottom: 2rem;
+    }
+    section.active {
+      display: block;
+    }
+    h2 {
+      text-align: center;
+      color: #0a3a71;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      font-size: 1.7rem;
+    }
+
+
+    /* Formularios */
+    form {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    label {
+      font-weight: 600;
+      color: #0f2c60;
+    }
+    input[type="text"], input[type="email"], input[type="password"],
+    input[type="date"], input[type="time"], select, textarea {
+      padding: 0.6rem 0.8rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1.5px solid #8ab7f9;
+      transition: border-color 0.3s ease;
+      width: 100%;
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 36px;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #064075;
+      background: #e7f0ff;
+    }
+    textarea {
+      min-height: 80px;
+    }
+
+
+    /* Botones primarios */
+    button {
+      background: #064075;
+      color: white;
+      font-weight: 700;
+      border: none;
+      padding: 0.75rem 1.2rem;
+      font-size: 1.1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+    button:hover:not([disabled]) {
+      background: #042f5a;
+    }
+    button:disabled {
+      background: #a4c3f1;
+      cursor: not-allowed;
+    }
+
+
+    /* Mensajes de error y éxito */
+    .error-message {
+      background: #ffdddd;
+      color: #d8000c;
+      font-weight: 600;
+      padding: 0.7rem 1rem;
+      border-radius: 4px;
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+    .success-message {
+      background: #d2e5ff;
+      color: #064075;
+      font-weight: 600;
+      padding: 0.7rem 1rem;
+      border-radius: 4px;
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+
+
+    /* Tablas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    th, td {
+      border: 1px solid #8ab7f9;
+      padding: 8px 6px;
+      text-align: left;
+    }
+    th {
+      background-color: #064075;
+      color: white;
+    }
+
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      nav {
+        justify-content: center;
+      }
+      main {
+        padding: 1rem 0.5rem 2rem 0.5rem;
+        /* Contenedor principal más limpio */
+section {
+    border-radius: 15px; /* Bordes más redondeados */
+    border: none;
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Sombra moderna */
+}
+
+/* Botones con gradientes profesionales */
+button {
+    background: linear-gradient(135deg, #0a3a71 0%, #064075 100%);
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+/* Tabla estilo moderno */
+table {
+    border: none;
+    margin-top: 25px;
+}
+
+th {
+    background-color: #f1f5f9; /* Fondo gris muy claro para cabeceras */
+    color: #475569;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    border: none;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+td {
+    border: none;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 12px;
+}
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header role="banner">
+    <h1>HRPL SAS - PRUEBA</h1>
+    <nav role="navigation" aria-label="Menú principal">
+      <a href="#" class="nav-link active" data-target="inicio" tabindex="0">Inicio</a>
+      <div class="dropdown" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-controls="institution-menu">
+        <button>Institucional &#x25BE;</button>
+        <div class="dropdown-content" id="institution-menu" role="menu" aria-label="informacion institucional">
+          <button role="menuitem" class="nav-link" data-target="plataforma_estrategica">Plataforma Estratégica</button>
+          <button role="menuitem" class="nav-link" data-target="politica_seguridad_paciente">Política de Seguridad Paciente</button>
+          <button role="menuitem" class="nav-link" data-target="modelo_prestacion_servicios">Modelo de Prestación de Servicios</button>
+          <button role="menuitem" class="nav-link" data-target="contratos">Contratos</button>
+        </div>
+      </div>
+      <div class="dropdown" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-controls="services-menu">
+        <button>Servicios &#x25BE;</button>
+        <div class="dropdown-content" id="services-menu" role="menu" aria-label="Servicios disponibles">
+          <button role="menuitem" class="nav-link" data-target="gestionCitas">Citas</button>
+          <button role="menuitem" class="nav-link" data-target="solicitudDocumentos">Documentos</button>
+          <button role="menuitem" class="nav-link" data-target="informes">Reportes</button>
+        </div>
+      </div>
+      <button class="nav-link" data-target="registro">Registrarse</button>
+      <button class="nav-link" data-target="auth" disabled>Iniciar Sesión</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Inicio -->
+    <section id="inicio" class="active" aria-label="Información de la empresa">
+      <h2>Bienvenido a HRPL SAS - PRUEBA</h2>
+      <img src="imagenes/DRA.jpg" alt="Una foto bonita" width="800" />
+      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;"> 
+        Somos una institución fundamentada en calidad, pertinencia, seguridad y alto sentido humanístico, con un liderazgo basado en la innovación y mejora continua de los procesos, trabajando para estar más cerca de nuestros usuarios.
+      </p>
+      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;"> 
+        Contamos con un equipo multidisciplinario de profesionales, especialistas y subespecialistas en las diferentes ramas de la salud, para brindar una atención integral; tenemos un área exclusiva para maternidad, además de los servicios de hospitalización en unidad de cuidados intensivos (UCI) adultos, pediátrica, neonatal y atención básica (hospitalización), lo que nos permite atender los procesos diagnósticos y terapéuticos de los neonatos, niños, jóvenes y adultos.
+      </p>
+      <p style="max-width:650px; margin:0 auto 2rem auto; color: #234a7a; font-size:1.1rem; line-height:1.6;text-align: justify;">
+        Nuestro compromiso es ofrecer un servicio confiable, ágil y personalizado para garantizar la mejor experiencia en salud para nuestros pacientes.
+      </p>
+    </section>
+    <!-- Plataforma Estrategica -->
+    <section id="plataforma_estrategica" aria-label="Plataforma Estratégica" style="display:none;">
+      <h2>Plataforma Estratégica</h2>
+      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
+        Nuestra plataforma estratégica se basa en la innovación constante, el compromiso con la calidad y el enfoque en la satisfacción del usuario, garantizando así un servicio de salud integral.
+      </p>
+    </section>
+
+    <!-- Política de Seguridad Paciente -->
+    <section id="politica_seguridad_paciente" aria-label="Política de Seguridad Paciente" style="display:none;">
+      <h2>Política de Seguridad Paciente</h2>
+      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
+        En HRPL SAS priorizamos la seguridad del paciente con protocolos estrictos y capacitación continua para nuestro personal, asegurando un entorno seguro y confiable.
+      </p>
+    </section>
+
+    <!-- Modelo de Prestación de Servicios -->
+    <section id="modelo_prestacion_servicios" aria-label="Modelo de Prestación de Servicios" style="display:none;">
+      <h2>Modelo de Prestación de Servicios</h2>
+      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
+Nuestro modelo de prestación se fundamenta en la atención personalizada, integración multidisciplinaria y procesos efectivos para atender las necesidades en salud con excelencia.
+      </p>
+    </section>
+
+    <!-- Contratos -->
+    <section id="contratos" aria-label="Contratos" style="display:none;">
+      <h2>Contratos</h2>
+      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
+        HRPL SAS mantiene contratos transparentes y responsables con proveedores y aliados estratégicos para ofrecer servicios de calidad y cumplir con las normativas vigentes.
+      </p>
+    </section>
+
+  <!-- Registro -->
+  <section id="registro" aria-label="Registro de usuario">
+    <h2>Registro de Usuario</h2>
+    <div id="registroError" class="error-message" style="display:none;"></div>
+    <div id="registroSuccess" class="success-message" style="display:none;"></div>
+    <form id="formRegistro" novalidate>
+      <label for="regNombre">Nombre completo</label>
+      <input type="text" id="regNombre" name="regNombre" autocomplete="name" required placeholder="Tu nombre completo" />
+      
+      <label for="regEmail">Correo electrónico</label>
+      <input type="email" id="regEmail" name="regEmail" autocomplete="email" required placeholder="correo@ejemplo.com" />
+      
+      <label for="regCedula">Número de documento</label>
+      <input type="text" id="regCedula" name="regCedula" maxlength="15" required placeholder="Número de documento" />
+      
+      <label for="regPassword">Contraseña</label>
+      <input type="password" id="regPassword" name="regPassword" autocomplete="new-password" required placeholder="Crear contraseña" />
+      
+      <button type="submit">Registrar</button>
+    </form>
+  </section>
+
+
+  <!-- Autenticación -->
+  <section id="auth" aria-label="Área de inicio de sesión">
+    <h2>Iniciar Sesión</h2>
+    <div id="loginError" class="error-message" style="display:none;"></div>
+    <div id="loginSuccess" class="success-message" style="display:none;"></div>
+    <form id="loginForm" novalidate>
+      <label for="loginEmail">Correo electrónico</label>
+      <input type="email" id="loginEmail" name="loginEmail" autocomplete="username" required placeholder="ejemplo@correo.com" />
+      
+      <label for="loginPassword">Contraseña</label>
+      <input type="password" id="loginPassword" name="loginPassword" autocomplete="current-password" required placeholder="********" />
+      
+      <button type="submit" disabled>Ingresar</button>
+    </form>
+  </section>
+
+
+  <!-- Gestión de Citas -->
+  <section id="gestionCitas" aria-label="Gestión de citas médicas">
+    <h2>Gestión de Citas</h2>
+    <div id="citasError" class="error-message" style="display:none;"></div>
+    <div id="citasSuccess" class="success-message" style="display:none;"></div>
+    <form id="formCitas" novalidate>
+      <label for="operacionCita">Seleccione operación</label>
+      <select id="operacionCita" required>
+        <option value="" disabled selected>Seleccione...</option>
+        <option value="agendar">Agendar Cita</option>
+        <option value="reprogramar">Reprogramar Cita</option>
+        <option value="cancelar">Cancelar Cita</option>
+      </select>
+
+
+      <!-- Agendar -->
+      <div id="agendarContainer" style="display:none; margin-top:1rem;">
+        <label for="fechaAgendar">Fecha</label>
+        <input type="date" id="fechaAgendar" min="" />
+        <label for="horaAgendar">Hora</label>
+        <input type="time" id="horaAgendar" />
+        <label for="medicoAgendar">Médico</label>
+        <input type="text" id="medicoAgendar" placeholder="Nombre del médico" />
+        <label for="especialidadAgendar">Especialidad</label>
+        <input type="text" id="especialidadAgendar" placeholder="Ej.: Cardiología" />
+        <p style="margin-top: 0.8rem; font-style: italic; color: #064075;">
+          <strong>Nota:</strong> Por favor, lleve sus documentos de identidad y resultados médicos anteriores el día de la cita.
+        </p>
+        <button type="button" id="btnAgendar">Agendar Cita</button>
+      </div>
+
+
+      <!-- Reprogramar -->
+      <div id="reprogramarContainer" style="display:none; margin-top:1rem;">
+        <label for="selectCitaReprog">Seleccione cita</label>
+        <select id="selectCitaReprog" aria-describedby="infoReprog"></select>
+        <div id="infoReprog" style="font-size: 0.9rem; color:#444; margin: 0.2rem 0 0.8rem 0;">Seleccione una cita para reprogramar.</div>
+        <label for="nuevaFechaReprog">Nueva fecha</label>
+        <input type="date" id="nuevaFechaReprog" min="" />
+        <label for="nuevoMedicoReprog">Nuevo médico</label>
+        <input type="text" id="nuevoMedicoReprog" placeholder="Deje vacío para mismo médico" />
+        <button type="button" id="btnReprogramar">Reprogramar Cita</button>
+      </div>
+
+
+      <!-- Cancelar -->
+      <div id="cancelarContainer" style="display:none; margin-top:1rem;">
+        <label for="selectCitaCancel">Seleccione cita</label>
+        <select id="selectCitaCancel"></select>
+        <label for="motivoCancel">Motivo cancelación</label>
+        <textarea id="motivoCancel" placeholder="Escribe el motivo de la cancelación"></textarea>
+        <button type="button" id="btnCancelar">Cancelar Cita</button>
+      </div>
+    </form>
+  </section>
+
+
+  <!-- Solicitud de Documentos -->
+  <section id="solicitudDocumentos" aria-label="Solicitud de documentos de accidentes de tránsito">
+    <h2>Solicitud de Documentos</h2>
+    <div id="docError" class="error-message" style="display:none;"></div>
+    <div id="docSuccess" class="success-message" style="display:none;"></div>
+    <form id="formSolicitud" novalidate>
+      <label for="docIdentidadSolic">Documento de identidad</label>
+      <input type="text" id="docIdentidadSolic" maxlength="15" placeholder="Número de documento" required />
+      
+      <label for="nombreSolicitante">Nombre completo</label>
+      <input type="text" id="nombreSolicitante" placeholder="Nombre completo" required />
+      
+      <label for="correoSolicitante">Correo electrónico</label>
+      <input type="email" id="correoSolicitante" placeho
+(Content truncated due to size limit. Use line ranges to read remaining content)
+
+
+
+
+ adminError.style.display = 'block';
+      return;
+    }
+    if(usuarios.some(u => u.cedula === ced)){
+      adminError.textContent = 'Usuario con esta cédula ya existe.';
+      adminError.style.display = 'block';
+      return;
+    }
+    usuarios.push({cedula: ced, nombre: nom, rol});
+    storage.save('usuarios', usuarios);
+    adminSuccess.textContent = 'Usuario creado exitosamente.';
+    adminSuccess.style.display = 'block';
+
+
+    document.getElementById('nuevoUsuarioCedula').value = '';
+    document.getElementById('nuevoUsuarioNombre').value = '';
+    document.getElementById('nuevoUsuarioRol').value = '';
+
+
+    actualizarTablaUsuarios();
+    actualizarInformes();
+  });
+
+
+  function actualizarTablaUsuarios(){
+    const tbody = document.querySelector('#tablaUsuarios tbody');
+    tbody.innerHTML = '';
+    usuarios.forEach(u => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${u.cedula}</td><td>${u.nombre}</td><td>${u.rol}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+
+  // Act. conteos informes
+  function actualizarInformes(){
+    document.getElementById('totalCitas').textContent = citas.length;
+    document.getElementById('totalSolicitudes').textContent = solicitudes.length;
+    document.getElementById('totalUsuarios').textContent = usuarios.length;
+  }
+</script>

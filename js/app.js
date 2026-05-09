@@ -1,3 +1,4 @@
+<script src="app.js" defer></script>
 // Variables y estado global
 let usuarios = [];
 let sesionesUsuario = null;
