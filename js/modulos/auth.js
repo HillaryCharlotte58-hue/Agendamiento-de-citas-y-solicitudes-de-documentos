@@ -1,6 +1,3 @@
-Diferencia
-Original
-Modificado
 import { saveData, getData } from './storage.js';
 
 let usuarios = getData('usuarios');
@@ -55,5 +52,3 @@ window.ir = function(seccion){
     document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
     document.getElementById(seccion).classList.add('active');
 }
-
-

@@ -41,5 +41,3 @@ export function cancelarCita(id) {
     }
     return false;
 }
-
-
