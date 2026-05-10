@@ -183,7 +183,7 @@
         <img src="css/imagenes/DRA.jpg" alt="Personal Médico" class="hero-img img-fluid" />
         <div class="row justify-content-center">
           <div class="col-md-10 col-lg-8">
-            <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;"> 
+            <p class="lead text-primary mb-4" style="text-align: justify;"> 
               Somos una institución fundamentada en calidad, pertinencia, seguridad y alto sentido humanístico, con un liderazgo basado en la innovación y mejora continua de los procesos, trabajando para estar más cerca de nuestros usuarios.
             </p>
           </div>
@@ -203,15 +203,18 @@
         <div class="row justify-content-center">
           <div class="col-md-8">
             <div class="card border-0 shadow-sm p-4">
-              <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;"> 
+              <p class="text-primary fs-5" style="text-align: justify;">
                 Nuestra plataforma estratégica se basa en la innovación constante, el compromiso con la calidad y el enfoque en la satisfacción del usuario, garantizando así un servicio de salud integral.
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Política de Seguridad Paciente -->
     <section id="politica_seguridad_paciente" aria-label="Política de Seguridad Paciente" style="display:none;">
       <h2>Política de Seguridad Paciente</h2>
-      <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div class="card border-0 shadow-sm p-4">
       <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
         En HRPL SAS priorizamos la seguridad del paciente con protocolos estrictos y capacitación continua para nuestro personal, asegurando un entorno seguro y confiable.
       </p>
@@ -232,12 +235,6 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
         HRPL SAS mantiene contratos transparentes y responsables con proveedores y aliados estratégicos para ofrecer servicios de calidad y cumplir con las normativas vigentes.
       </p>
     </section>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    
 
   <!-- Registro -->
   <section id="registro" aria-label="Registro de usuario">
@@ -766,27 +763,24 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
       errorDiv.style.display = 'block';
       return;
     }
-    const citasUsuario = citas.filter(c => c.cedula === sesionesUsuario.cedula);
     const idx = selectCita.value;
-    if (!citasUsuario[idx]){
+    const citasUsuario = citas.filter(c => c.cedula === sesionesUsuario.cedula);
+    const cita = citasUsuario[idx];
+
+    if (!cita) {
       errorDiv.textContent = 'Cita seleccionada no válida.';
       errorDiv.style.display = 'block';
       return;
     }
-    const cita = citasUsuario[idx];
-    // Actualizar cita en arreglo global
-    const indexGlobal = citas.findIndex(c => c.cedula === sesionesUsuario.cedula && c.fecha === cita.fecha && c.hora === cita.hora);
-    if(indexGlobal === -1){
-      errorDiv.textContent = 'Error interno al reprogramar cita.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-    citas[indexGlobal].fecha = nuevaFecha;
-    citas[indexGlobal].medico = nuevoMedico || citas[indexGlobal].medico;
-    citas[indexGlobal].estado = 'reprogramada';
-    storage.save('citas', citas);
 
-    successDiv.textContent = 'Cita reprogramada correctamente.';
+    const indexGlobal = citas.findIndex(c => c.cedula === sesionesUsuario.cedula && c.fecha === cita.fecha && c.hora === cita.hora);
+    if(indexGlobal !== -1){
+      citas[indexGlobal].fecha = nuevaFecha;
+      citas[indexGlobal].medico = nuevoMedico || citas[indexGlobal].medico;
+      citas[indexGlobal].estado = 'reprogramada';
+      storage.save('citas', citas);
+      successDiv.textContent = 'Cita reprogramada correctamente.';
+    }
     successDiv.style.display = 'block';
 
 
@@ -810,25 +804,22 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
       errorDiv.style.display = 'block';
       return;
     }
-    const citasUsuario = citas.filter(c => c.cedula === sesionesUsuario.cedula);
     const idx = selectCita.value;
-    if (!citasUsuario[idx]){
+    const citasUsuario = citas.filter(c => c.cedula === sesionesUsuario.cedula);
+    const cita = citasUsuario[idx];
+
+    if (!cita) {
       errorDiv.textContent = 'Cita seleccionada no válida.';
       errorDiv.style.display = 'block';
       return;
     }
-    const cita = citasUsuario[idx];
-    // Eliminar cita en arreglo global
-    const indexGlobal = citas.findIndex(c => c.cedula === sesionesUsuario.cedula && c.fecha === cita.fecha && c.hora === cita.hora);
-    if(indexGlobal === -1){
-      errorDiv.textContent = 'Error interno al cancelar cita.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-    citas.splice(indexGlobal,1);
-    storage.save('citas', citas);
 
-    successDiv.textContent = 'Cita cancelada correctamente.';
+    const indexGlobal = citas.findIndex(c => c.cedula === sesionesUsuario.cedula && c.fecha === cita.fecha && c.hora === cita.hora);
+    if(indexGlobal !== -1){
+      citas.splice(indexGlobal, 1);
+      storage.save('citas', citas);
+      successDiv.textContent = 'Cita cancelada correctamente.';
+    }
     successDiv.style.display = 'block';
 
 
