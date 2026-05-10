@@ -459,10 +459,17 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
       btnLoginNav.disabled = false;
     }
 
-    // Protección de rutas: Si la sección es administracion, verificar rol
-    if(seccionId === 'administracion') {
-      if(!sesionesUsuario || sesionesUsuario.rol !== 'administrador') {
-        alert('Acceso denegado. Solo administradores pueden entrar aquí.');
+    // Protección de rutas por Rol
+    const rutasProtegidas = {
+      'administracion': ['administrador'],
+      'informes': ['administrador', 'funcionario'],
+      'gestionCitas': ['paciente', 'administrador', 'funcionario'],
+      'solicitudDocumentos': ['paciente', 'administrador', 'funcionario']
+    };
+
+    if(rutasProtegidas[seccionId]) {
+      if(!sesionesUsuario || !rutasProtegidas[seccionId].includes(sesionesUsuario.rol)) {
+        alert(`Acceso denegado para el rol: ${sesionesUsuario ? sesionesUsuario.rol : 'visitante'}`);
         cambiarSeccion('inicio');
         return;
       }
@@ -481,6 +488,7 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
   function actualizarInterfazUsuario() {
     const btnAuth = document.querySelector('.nav-link-btn[data-target="auth"]') || document.querySelector('.nav-link-btn:last-child');
     const btnRegistro = document.querySelector('.nav-link-btn[data-target="registro"]');
+    const adminLink = document.querySelector('[data-target="informes"]'); // Usaremos el de reportes como base para el menú admin
     
     if (sesionesUsuario) {
       btnAuth.textContent = 'Cerrar Sesión';
@@ -489,6 +497,12 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
       btnAuth.onclick = cerrarSesion;
       btnAuth.removeAttribute('data-target');
       if (btnRegistro) btnRegistro.style.display = 'none';
+
+      // Mostrar opciones según Rol
+      if (sesionesUsuario.rol === 'administrador' || sesionesUsuario.rol === 'funcionario') {
+        // Podríamos habilitar un menú extra aquí en el futuro
+        console.log("Acceso administrativo detectado");
+      }
     } else {
       btnAuth.textContent = 'Iniciar Sesión';
       btnAuth.classList.add('btn-light');
@@ -872,7 +886,8 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
       telefono,
       fechaAccidente,
       tipoDoc,
-      estado: 'pendiente'
+      estado: 'pendiente',
+      id: Date.now()
     });
     storage.save('solicitudes', solicitudes);
 
