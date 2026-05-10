@@ -3,979 +3,414 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HRPL SAS - Sistema de Gestión de Salud</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <title>HRPL SAS - Excelencia en Salud</title>
+  
+  <!-- Estilos Externos -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
   <style>
     :root {
-      --primary-color: #0a3a71;
-      --secondary-color: #064075;
-      --accent-color: #8ab7f9;
-      --bg-light: #f9fbfd;
-      --text-dark: #0f2c60;
+      --primary-color: #004a99;
+      --secondary-color: #003366;
+      --accent-color: #007bff;
+      --bg-body: #f0f4f8;
+      --text-main: #2c3e50;
+      --card-shadow: 0 20px 60px rgba(0,0,0,0.08);
     }
 
+    * { font-family: 'Poppins', sans-serif !important; box-sizing: border-box; }
+
     body {
-      background-color: var(--bg-light);
-      color: var(--text-dark);
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      margin: 0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    header {
-      background: var(--primary-color);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    .main-wrapper {
+      max-width: 1200px;
+      width: 95%;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 30px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
-    .navbar-brand {
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: white !important;
-    }
+    header { background: white; border-bottom: 1px solid #f0f0f0; padding: 1rem 0; }
+    .navbar-brand { color: var(--primary-color) !important; font-weight: 700; font-size: 1.6rem; }
+    .nav-link { color: #555 !important; font-weight: 500; margin: 0 10px; transition: color 0.3s; }
+    .nav-link:hover, .nav-link.active { color: var(--primary-color) !important; }
 
-    .nav-link {
-      color: rgba(255,255,255,0.8) !important;
-      font-weight: 500;
+    main { padding: 0; flex: 1; }
+    section { display: none; padding: 4rem 3rem; animation: fadeIn 0.6s ease; }
+    section.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    h2 { color: var(--primary-color); font-weight: 700; text-align: center; margin-bottom: 3rem; }
+    h2::after { content: ''; display: block; width: 60px; height: 4px; background: var(--accent-color); margin: 15px auto; border-radius: 2px; }
+
+    p { text-align: justify; line-height: 1.8; color: #5d6d7e; }
+
+    .btn-primary { background: var(--primary-color); border: none; border-radius: 15px; padding: 0.8rem 2.5rem; font-weight: 600; box-shadow: 0 4px 15px rgba(0,74,153,0.2); }
+    .btn-primary:hover { background: var(--secondary-color); transform: translateY(-2px); }
+
+    .news-ticker { background: #f8f9fa; border-top: 1px solid #eee; padding: 12px 0; overflow: hidden; white-space: nowrap; }
+    .ticker-content { display: inline-block; animation: tickerMove 35s linear infinite; }
+    .ticker-content span { margin-right: 100px; font-size: 0.9rem; color: var(--primary-color); font-weight: 500; }
+    @keyframes tickerMove { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+    .chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 2000; }
+    .chat-btn { 
+      width: 60px; 
+      height: 60px; 
+      background: var(--primary-color); 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: white !important; 
+      font-size: 1.8rem; 
+      cursor: pointer; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
       transition: all 0.3s ease;
     }
+    .chat-btn:hover { transform: scale(1.1); background: var(--secondary-color); }
+    .chat-box { position: absolute; bottom: 80px; right: 0; width: 350px; background: white; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); display: none; flex-direction: column; overflow: hidden; }
+    .chat-header { background: var(--primary-color); color: white; padding: 20px; font-weight: 600; }
+    .chat-body { height: 350px; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .bubble { padding: 10px 15px; border-radius: 15px; font-size: 0.9rem; max-width: 85%; }
+    .bot { background: #f0f2f5; align-self: flex-start; }
+    .user { background: var(--primary-color); color: white; align-self: flex-end; }
 
-    .nav-link:hover, .nav-link.active {
-      color: white !important;
-      background: rgba(255,255,255,0.1);
-      border-radius: 4px;
-    }
-
-    main {
-      flex: 1;
-      padding: 3rem 0;
-    }
-
-    section {
-      display: none;
-      background: white;
-      padding: 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-      animation: fadeIn 0.4s ease-out;
-    }
-
-    section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h2 {
-      color: var(--primary-color);
-      font-weight: 700;
-      margin-bottom: 2rem;
-      position: relative;
-      padding-bottom: 10px;
-    }
-
-    h2::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 4px;
-      background: var(--accent-color);
-      border-radius: 2px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-      border: none;
-      padding: 0.6rem 1.5rem;
-      font-weight: 600;
-    }
-
-    .form-label {
-      font-weight: 600;
-      color: var(--primary-color);
-    }
-
-    .table thead th {
-      background-color: var(--bg-light);
-      color: var(--primary-color);
-      border-bottom: 2px solid var(--accent-color);
-    }
-
-    .error-message {
-      background-color: #fff5f5;
-      color: #c53030;
-      border-left: 4px solid #c53030;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      border-radius: 4px;
-    }
-
-    .success-message {
-      background-color: #f0fff4;
-      color: #2f855a;
-      border-left: 4px solid #2f855a;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      border-radius: 4px;
-    }
-
-    .hero-img {
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      margin-bottom: 2rem;
-      max-width: 100%;
-      height: auto;
+    .form-control, .form-select { border-radius: 12px; padding: 0.75rem 1.2rem; border: 1px solid #e1e8ed; background: #fdfdfd; }
+    .card { border-radius: 20px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+    .hero-img { 
+      width: 100%; 
+      max-height: 500px;
+      object-fit: cover;
+      border-radius: 25px; 
+      margin-bottom: 2rem; 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+      background: #eee; /* Fondo gris mientras carga */
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <nav class="navbar navbar-expand-lg navbar-dark container">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#" onclick="cambiarSeccion('inicio')">HRPL SAS</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link active" href="#" data-target="inicio">Inicio</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="instDropdown" role="button" data-bs-toggle="dropdown">Institucional</a>
-              <ul class="dropdown-menu">
-                <li><button class="dropdown-item nav-link-drop" data-target="plataforma_estrategica">Plataforma Estratégica</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="politica_seguridad_paciente">Política de Seguridad Paciente</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="modelo_prestacion_servicios">Modelo de Prestación de Servicios</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="contratos">Contratos</button></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="servDropdown" role="button" data-bs-toggle="dropdown">Servicios</a>
-              <ul class="dropdown-menu">
-                <li><button class="dropdown-item nav-link-drop" data-target="gestionCitas">Citas</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="solicitudDocumentos">Documentos</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="informes">Reportes</button></li>
-              </ul>
-            </li>
-          </ul>
-          <div class="d-flex gap-2">
-            <button class="btn btn-outline-light nav-link-btn" data-target="registro">Registrarse</button>
-            <button class="btn btn-light nav-link-btn" data-target="auth">Iniciar Sesión</button>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </header>
-
-  <main class="container">
-    <!-- Inicio -->
-    <section id="inicio" class="active" aria-label="Información de la empresa">
-      <div class="text-center">
-        <h2>Bienvenido a HRPL SAS</h2>
-        <img src="css/imagenes/DRA.jpg" alt="Personal Médico" class="hero-img img-fluid" />
-        <div class="row justify-content-center">
-          <div class="col-md-10 col-lg-8">
-            <p class="lead text-primary mb-4" style="text-align: justify;"> 
-              Somos una institución fundamentada en calidad, pertinencia, seguridad y alto sentido humanístico, con un liderazgo basado en la innovación y mejora continua de los procesos, trabajando para estar más cerca de nuestros usuarios.
-            </p>
-          </div>
-        </div>
-      </div>
-      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;"> 
-        Contamos con un equipo multidisciplinario de profesionales, especialistas y subespecialistas en las diferentes ramas de la salud, para brindar una atención integral; tenemos un área exclusiva para maternidad, además de los servicios de hospitalización en unidad de cuidados intensivos (UCI) adultos, pediátrica, neonatal y atención básica (hospitalización), lo que nos permite atender los procesos diagnósticos y terapéuticos de los neonatos, niños, jóvenes y adultos.
-      </p>
-      <p style="max-width:650px; margin:0 auto 2rem auto; color: #234a7a; font-size:1.1rem; line-height:1.6;text-align: justify;">
-        Nuestro compromiso es ofrecer un servicio confiable, ágil y personalizado para garantizar la mejor experiencia en salud para nuestros pacientes.
-      </p>
-    </section>
-    <!-- Plataforma Estrategica -->
-    <section id="plataforma_estrategica" aria-label="Plataforma Estratégica">
-      <div class="text-center">
-        <h2>Plataforma Estratégica</h2>
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div class="card border-0 shadow-sm p-4">
-              <p class="text-primary fs-5" style="text-align: justify;">
-                Nuestra plataforma estratégica se basa en la innovación constante, el compromiso con la calidad y el enfoque en la satisfacción del usuario, garantizando así un servicio de salud integral.
-              </p>
+  <div class="main-wrapper">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light container">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#" onclick="cambiarSeccion('inicio')">HRPL SAS</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item"><a class="nav-link active" href="#" data-target="inicio">Inicio</a></li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="instDropdown" role="button" data-bs-toggle="dropdown">Institucional</a>
+                <ul class="dropdown-menu shadow border-0">
+                  <li><button class="dropdown-item nav-link-drop" data-target="plataforma_estrategica">Plataforma Estratégica</button></li>
+                  <li><button class="dropdown-item nav-link-drop" data-target="derechos_deberes">Derechos y Deberes</button></li>
+                  <li><button class="dropdown-item nav-link-drop" data-target="politica_seguridad_paciente">Seguridad del Paciente</button></li>
+                  <li><button class="dropdown-item nav-link-drop" data-target="modelo_prestacion_servicios">Modelo de Servicios</button></li>
+                  <li><button class="dropdown-item nav-link-drop" data-target="contratos">Contratos</button></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="servDropdown" role="button" data-bs-toggle="dropdown">Servicios</a>
+                <ul class="dropdown-menu shadow border-0">
+                  <li><button class="dropdown-item nav-link-drop" data-target="gestionCitas">Citas Médicas</button></li>
+                  <li><button class="dropdown-item nav-link-drop" data-target="solicitudDocumentos">Documentos SOAT</button></li>
+                  <li><button class="dropdown-item nav-link-drop" data-target="pqrsf">Portal PQRSF</button></li>
+                  <li><button class="dropdown-item nav-link-drop" data-target="informes">Reportes</button></li>
+                </ul>
+              </li>
+            </ul>
+            <div class="d-flex gap-2">
+              <button class="btn btn-link text-decoration-none nav-link-btn" data-target="registro">Registrarse</button>
+              <button class="btn btn-primary nav-link-btn" data-target="auth">Iniciar Sesión</button>
             </div>
           </div>
         </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Inicio -->
+      <section id="inicio" class="active">
+        <div class="text-center">
+          <h2>Bienvenido a HRPL SAS</h2>
+          <!-- Imagen con fallback automático si falla la ruta local -->
+          <img src="css/imagenes/DRA.jpg" 
+               onerror="this.src='https://images.unsplash.com/photo-1559839734-2b71f1e3c770?auto=format&fit=crop&w=1200&q=80'" 
+               alt="Excelencia en Salud" class="hero-img">
+          <div class="row justify-content-center mt-4">
+            <div class="col-md-10">
+              <p class="lead text-center fw-bold text-primary mb-3">¡Salud con Excelencia!</p>
+              <p>Somos una institución fundamentada en calidad, pertinencia, seguridad y alto sentido humanístico. Trabajamos para estar más cerca de nuestros usuarios con tecnología de punta y un equipo médico de excelencia.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Plataforma Estratégica -->
+      <section id="plataforma_estrategica">
+        <h2>Plataforma Estratégica</h2>
+        <div class="row g-4 text-center">
+          <div class="col-md-4"><div class="card p-4 h-100 shadow-sm"><i class="fas fa-bullseye fa-3x text-primary mb-3"></i><h4>Misión</h4><p>Brindar servicios de salud con los más altos estándares de calidad y seguridad.</p></div></div>
+          <div class="col-md-4"><div class="card p-4 h-100 shadow-sm"><i class="fas fa-eye fa-3x text-primary mb-3"></i><h4>Visión</h4><p>Ser líderes en la región en atención de alta complejidad y calidez humana.</p></div></div>
+          <div class="col-md-4"><div class="card p-4 h-100 shadow-sm"><i class="fas fa-heart fa-3x text-primary mb-3"></i><h4>Valores</h4><p>Respeto, Ética, Compromiso y Excelencia en cada proceso.</p></div></div>
+        </div>
+      </section>
+
+      <!-- Derechos y Deberes -->
+      <section id="derechos_deberes">
+        <h2>Derechos y Deberes</h2>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="card p-4 h-100 border-0 shadow-sm" style="background: #eef6ff;">
+              <h4 class="text-primary mb-4"><i class="fas fa-hand-holding-heart me-2"></i>Derechos</h4>
+              <p><i class="fas fa-check text-primary me-2"></i>Atención humanizada y oportuna.</p>
+              <p><i class="fas fa-check text-primary me-2"></i>Confidencialidad de su historia clínica.</p>
+              <p><i class="fas fa-check text-primary me-2"></i>Información clara sobre su diagnóstico.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card p-4 h-100 border-0 shadow-sm" style="background: #fdf2f2;">
+              <h4 class="text-danger mb-4"><i class="fas fa-clipboard-list me-2"></i>Deberes</h4>
+              <p><i class="fas fa-user-shield text-danger me-2"></i>Trato respetuoso al personal.</p>
+              <p><i class="fas fa-info-circle text-danger me-2"></i>Información veraz sobre su salud.</p>
+              <p><i class="fas fa-building text-danger me-2"></i>Cuidado de las instalaciones.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Gestión Citas -->
+      <section id="gestionCitas">
+        <h2>Gestión de Citas Médicas</h2>
+        <div class="row g-4">
+          <div class="col-md-5">
+            <div class="card p-4 shadow-sm">
+              <h5 class="mb-4">Agendar Nueva Cita</h5>
+              <div class="mb-3"><label class="form-label">Especialidad</label><select id="especialidadAgendar" class="form-select"><option>Medicina General</option><option>Pediatría</option><option>Cardiología</option></select></div>
+              <div class="mb-3"><label class="form-label">Fecha</label><input type="date" id="fechaAgendar" class="form-control"></div>
+              <div class="mb-3"><label class="form-label">Hora</label><input type="time" id="horaAgendar" class="form-control"></div>
+              <button class="btn btn-primary w-100" id="btnAgendar">Agendar Cita</button>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <div class="card p-4 shadow-sm h-100">
+              <h5 class="mb-4">Mis Citas Programadas</h5>
+              <div id="listaCitas" class="table-responsive">
+                <p class="text-muted">No tiene citas programadas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Solicitud Documentos SOAT -->
+      <section id="solicitudDocumentos">
+        <h2>Documentación Accidente de Tránsito (SOAT)</h2>
+        <div class="card p-4 mx-auto shadow-sm" style="max-width: 800px;">
+          <p class="text-center text-primary fw-bold">Trámite especializado para atención por accidentes de tránsito.</p>
+          <form id="formSolicitud">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Documento Requerido</label>
+                <select id="tipoDocSolicitado" class="form-select">
+                  <option>Epicrisis de Atención (SOAT)</option>
+                  <option>Formato FURAT / FURIPS</option>
+                  <option>Certificado de Atención Médica</option>
+                  <option>Resultados de Imágenes Diagnósticas</option>
+                  <option>Copia de Historia Clínica Completa</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Fecha del Accidente</label>
+                <input type="date" class="form-control" id="fechaAccidente">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Detalles de la Solicitud</label>
+                <textarea class="form-control" rows="3" placeholder="Especifique el motivo de su solicitud legal o médica..."></textarea>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary w-100 mt-4" id="btnSolicitarDoc">Radicar Solicitud SOAT</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Secciones Adicionales Restauradas -->
+      <section id="politica_seguridad_paciente"><h2>Seguridad del Paciente</h2><p>Nuestra política garantiza un entorno libre de riesgos asistenciales mediante protocolos de identificación, prevención de caídas y seguridad en medicamentos.</p></section>
+      <section id="modelo_prestacion_servicios"><h2>Modelo de Servicios</h2><p>Contamos con un modelo integral que abarca desde la consulta externa hasta la hospitalización de alta complejidad.</p></section>
+      <section id="contratos"><h2>Contratos y Convenios</h2><p>Mantenemos alianzas con las principales EPS y aseguradoras de riesgos de tránsito para garantizar su cobertura.</p></section>
+      <section id="pqrsf"><h2>Portal PQRSF</h2><div class="card p-4 shadow-sm"><form id="formPQRSF"><div class="mb-3"><label class="form-label">Tipo</label><select id="pqrsfTipo" class="form-select"><option>Petición</option><option>Queja</option><option>Reclamo</option><option>Felicitación</option></select></div><div class="mb-3"><label class="form-label">Descripción</label><textarea id="pqrsfDesc" class="form-control" rows="4"></textarea></div><button type="submit" class="btn btn-primary w-100">Enviar Radicado</button></form></div></section>
+      <section id="informes"><h2>Reportes del Sistema</h2><div class="row g-3 text-center"><div class="col-4"><div class="card p-3 bg-light"><h3 id="totalCitas">0</h3><p>Citas</p></div></div><div class="col-4"><div class="card p-3 bg-light"><h3 id="totalSolicitudes">0</h3><p>Documentos</p></div></div><div class="col-4"><div class="card p-3 bg-light"><h3 id="totalUsuarios">0</h3><p>Usuarios</p></div></div></div></section>
+      <section id="auth"><h2>Iniciar Sesión</h2><form id="loginForm" class="mx-auto" style="max-width: 400px;"><div class="mb-3"><label class="form-label">Correo</label><input type="email" id="loginEmail" class="form-control"></div><div class="mb-3"><label class="form-label">Contraseña</label><input type="password" id="loginPassword" class="form-control"></div><button type="submit" class="btn btn-primary w-100">Ingresar</button></form></section>
+      <section id="registro"><h2>Registrarse</h2><form id="formRegistro" class="mx-auto" style="max-width: 400px;"><div class="mb-3"><label class="form-label">Nombre</label><input type="text" id="regNombre" class="form-control"></div><div class="mb-3"><label class="form-label">Cédula</label><input type="text" id="regCedula" class="form-control"></div><div class="mb-3"><label class="form-label">Correo</label><input type="email" id="regEmail" class="form-control"></div><div class="mb-3"><label class="form-label">Contraseña</label><input type="password" id="regPassword" class="form-control"></div><button type="submit" class="btn btn-primary w-100">Crear Cuenta</button></form></section>
+
+    </main>
+
+    <div class="news-ticker">
+      <div class="ticker-content">
+        <span><i class="fas fa-star"></i> Bienvenido a HRPL SAS</span>
+        <span><i class="fas fa-ambulance"></i> Urgencias 24/7</span>
+        <span><i class="fas fa-file-medical"></i> Trámites SOAT en línea</span>
+        <span><i class="fas fa-user-md"></i> Excelencia Médica</span>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <!-- Política de Seguridad Paciente -->
-    <section id="politica_seguridad_paciente" aria-label="Política de Seguridad Paciente" style="display:none;">
-      <h2>Política de Seguridad Paciente</h2>
-      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
-        En HRPL SAS priorizamos la seguridad del paciente con protocolos estrictos y capacitación continua para nuestro personal, asegurando un entorno seguro y confiable.
-      </p>
-    </section>
-
-    <!-- Modelo de Prestación de Servicios -->
-    <section id="modelo_prestacion_servicios" aria-label="Modelo de Prestación de Servicios" style="display:none;">
-      <h2>Modelo de Prestación de Servicios</h2>
-      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
-Nuestro modelo de prestación se fundamenta en la atención personalizada, integración multidisciplinaria y procesos efectivos para atender las necesidades en salud con excelencia.
-      </p>
-    </section>
-
-    <!-- Contratos -->
-    <section id="contratos" aria-label="Contratos" style="display:none;">
-      <h2>Contratos</h2>
-      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
-        HRPL SAS mantiene contratos transparentes y responsables con proveedores y aliados estratégicos para ofrecer servicios de calidad y cumplir con las normativas vigentes.
-      </p>
-    </section>
-
-  <!-- Registro -->
-  <section id="registro" aria-label="Registro de usuario">
-    <h2>Registro de Usuario</h2>
-    <div id="registroError" class="error-message" style="display:none;"></div>
-    <div id="registroSuccess" class="success-message" style="display:none;"></div>
-    <form id="formRegistro" class="mx-auto" style="max-width: 450px;" novalidate>
-      <div class="mb-3">
-        <label for="regNombre" class="form-label">Nombre completo</label>
-        <input type="text" id="regNombre" name="regNombre" class="form-control" autocomplete="name" required placeholder="Tu nombre completo" />
+  <!-- Chat Widget Funcional -->
+  <div class="chat-widget">
+    <div class="chat-box" id="chatBox">
+      <div class="chat-header d-flex justify-content-between align-items-center">
+        <span><i class="fa-solid fa-user-doctor me-2"></i>Asistente HRPL</span>
+        <button class="btn btn-sm text-white p-0" onclick="toggleChat()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div class="mb-3">
-        <label for="regEmail" class="form-label">Correo electrónico</label>
-        <input type="email" id="regEmail" name="regEmail" class="form-control" autocomplete="email" required placeholder="correo@ejemplo.com" />
+      <div class="chat-body" id="chatBody">
+        <div class="bubble bot">¡Hola! 👋 Soy el asistente de HRPL SAS. ¿En qué puedo apoyarte hoy?</div>
       </div>
-      <div class="mb-3">
-        <label for="regCedula" class="form-label">Número de documento</label>
-        <input type="text" id="regCedula" name="regCedula" class="form-control" maxlength="15" required placeholder="Número de documento" />
+      <div class="p-3 border-top bg-light">
+        <div class="input-group">
+          <input type="text" class="form-control border-0 bg-white" id="chatInput" placeholder="Escribe tu duda aquí..." onkeypress="if(event.key==='Enter') sendChat()">
+          <button class="btn btn-primary btn-sm rounded-pill ms-2 px-3" onclick="sendChat()">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="regPassword" class="form-label">Contraseña</label>
-        <input type="password" id="regPassword" name="regPassword" class="form-control" autocomplete="new-password" required placeholder="Crear contraseña" />
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Registrar</button>
-    </form>
-  </section>
+    </div>
+    <div class="chat-btn" onclick="toggleChat()">
+      <i class="fa-solid fa-comments"></i>
+    </div>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const storage = { save: (k, d) => localStorage.setItem(k, JSON.stringify(d)), get: (k) => JSON.parse(localStorage.getItem(k)) || [] };
+    let usuarios = storage.get('usuarios'), citas = storage.get('citas'), solicitudes = storage.get('solicitudes'), sesionActiva = JSON.parse(localStorage.getItem('sesion'));
 
-  <!-- Autenticación -->
-  <section id="auth" aria-label="Área de inicio de sesión">
-    <h2>Iniciar Sesión</h2>
-    <div id="loginError" class="error-message" style="display:none;"></div>
-    <div id="loginSuccess" class="success-message" style="display:none;"></div>
-    <form id="loginForm" novalidate>
-      <label for="loginEmail">Correo electrónico</label>
-      <input type="email" id="loginEmail" name="loginEmail" autocomplete="username" required placeholder="ejemplo@correo.com" />
-      
-      <label for="loginPassword">Contraseña</label>
-      <input type="password" id="loginPassword" name="loginPassword" autocomplete="current-password" required placeholder="********" />
-      
-      <button type="submit" disabled>Ingresar</button>
-    </form>
-  </section>
-
-
-  <!-- Gestión de Citas -->
-  <section id="gestionCitas" aria-label="Gestión de citas médicas">
-    <h2>Gestión de Citas</h2>
-    <div id="citasError" class="error-message" style="display:none;"></div>
-    <div id="citasSuccess" class="success-message" style="display:none;"></div>
-    <form id="formCitas" novalidate>
-      <label for="operacionCita">Seleccione operación</label>
-      <select id="operacionCita" required>
-        <option value="" disabled selected>Seleccione...</option>
-        <option value="agendar">Agendar Cita</option>
-        <option value="reprogramar">Reprogramar Cita</option>
-        <option value="cancelar">Cancelar Cita</option>
-      </select>
-
-
-      <!-- Agendar -->
-      <div id="agendarContainer" style="display:none; margin-top:1rem;">
-        <label for="fechaAgendar">Fecha</label>
-        <input type="date" id="fechaAgendar" min="" />
-        <label for="horaAgendar">Hora</label>
-        <input type="time" id="horaAgendar" />
-        <label for="medicoAgendar">Médico</label>
-        <input type="text" id="medicoAgendar" placeholder="Nombre del médico" />
-        <label for="especialidadAgendar">Especialidad</label>
-        <input type="text" id="especialidadAgendar" placeholder="Ej.: Cardiología" />
-        <p style="margin-top: 0.8rem; font-style: italic; color: #064075;">
-          <strong>Nota:</strong> Por favor, lleve sus documentos de identidad y resultados médicos anteriores el día de la cita.
-        </p>
-        <button type="button" id="btnAgendar">Agendar Cita</button>
-      </div>
-
-
-      <!-- Reprogramar -->
-      <div id="reprogramarContainer" style="display:none; margin-top:1rem;">
-        <label for="selectCitaReprog">Seleccione cita</label>
-        <select id="selectCitaReprog" aria-describedby="infoReprog"></select>
-        <div id="infoReprog" style="font-size: 0.9rem; color:#444; margin: 0.2rem 0 0.8rem 0;">Seleccione una cita para reprogramar.</div>
-        <label for="nuevaFechaReprog">Nueva fecha</label>
-        <input type="date" id="nuevaFechaReprog" min="" />
-        <label for="nuevoMedicoReprog">Nuevo médico</label>
-        <input type="text" id="nuevoMedicoReprog" placeholder="Deje vacío para mismo médico" />
-        <button type="button" id="btnReprogramar">Reprogramar Cita</button>
-      </div>
-
-
-      <!-- Cancelar -->
-      <div id="cancelarContainer" style="display:none; margin-top:1rem;">
-        <label for="selectCitaCancel">Seleccione cita</label>
-        <select id="selectCitaCancel"></select>
-        <label for="motivoCancel">Motivo cancelación</label>
-        <textarea id="motivoCancel" placeholder="Escribe el motivo de la cancelación"></textarea>
-        <button type="button" id="btnCancelar">Cancelar Cita</button>
-      </div>
-    </form>
-  </section>
-
-
-  <!-- Solicitud de Documentos -->
-  <section id="solicitudDocumentos" aria-label="Solicitud de documentos de accidentes de tránsito">
-    <h2>Solicitud de Documentos</h2>
-    <div id="docError" class="error-message" style="display:none;"></div>
-    <div id="docSuccess" class="success-message" style="display:none;"></div>
-    <form id="formSolicitud" novalidate>
-      <label for="docIdentidadSolic">Documento de identidad</label>
-      <input type="text" id="docIdentidadSolic" maxlength="15" placeholder="Número de documento" required />
-      
-      <label for="nombreSolicitante">Nombre completo</label>
-      <input type="text" id="nombreSolicitante" placeholder="Nombre completo" required />
-      
-      <label for="correoSolicitante">Correo electrónico</label>
-      <input type="email" id="correoSolicitante" placeholder="Correo electrónico" required />
-      
-      <label for="telefonoSolicitante">Teléfono</label>
-      <input type="text" id="telefonoSolicitante" placeholder="Teléfono de contacto" required />
-      
-      <label for="fechaAccidenteSolic">Fecha del accidente o atención</label>
-      <input type="date" id="fechaAccidenteSolic" max="" required />
-      
-      <label for="tipoDocSolicitado">Tipo de documento requerido</label>
-      <select id="tipoDocSolicitado" required>
-        <option value="" disabled selected>Seleccione...</option>
-        <option value="informe">Informe de accidente</option>
-        <option value="certificado">Certificado SOAT</option>
-        <option value="factura">Factura de venta</option>
-        <option value="otro">Otro</option>
-      </select>
-      <button type="button" id="btnSolicitarDoc">Solicitar Documento</button>
-    </form>
-  </section>
-
-
-  <!-- Informes -->
-  <section id="informes" aria-label="Informes y reportes">
-    <h2>Reportes Generales</h2>
-    <p style="text-align:center; margin-bottom: 1rem; color:#064075;">
-      Resumen de citas, solicitudes y usuarios.
-    </p>
-    <table aria-describedby="descInformes">
-      <caption id="descInformes" class="hidden">Informe de estadísticas del sistema</caption>
-      <thead>
-        <tr><th>Tipo</th><th>Cantidad</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Citas programadas</td><td id="totalCitas">0</td></tr>
-        <tr><td>Solicitudes de documentos</td><td id="totalSolicitudes">0</td></tr>
-        <tr><td>Usuarios registrados</td><td id="totalUsuarios">0</td></tr>
-        <tr><td>Citas por especialidades</td><td id="totalEspecialidades">0</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-
-  <!-- Administración Usuarios -->
-  <section id="administracion" aria-label="Administración de usuarios">
-    <h2>Administración de Usuarios</h2>
-    <div id="adminError" class="error-message" style="display:none;"></div>
-    <div id="adminSuccess" class="success-message" style="display:none;"></div>
-    <form id="formAdmin" novalidate>
-      <label for="nuevoUsuarioCedula">Cédula Usuario</label>
-      <input type="text" id="nuevoUsuarioCedula" maxlength="15" placeholder="Cédula" required />
-      <label for="nuevoUsuarioNombre">Nombre Completo</label>
-      <input type="text" id="nuevoUsuarioNombre" placeholder="Nombre completo" required />
-      <label for="nuevoUsuarioRol">Rol</label>
-      <select id="nuevoUsuarioRol" required>
-        <option value="" disabled selected>Seleccione rol</option>
-        <option value="paciente">Paciente</option>
-        <option value="administrador">Administrador</option>
-        <option value="funcionario">Funcionario IPS</option>
-      </select>
-      <button type="button" id="btnCrearUsuario">Crear Usuario</button>
-    </form>
-    <h3 style="margin-top: 1.5rem;">Usuarios Registrados</h3>
-    <table id="tablaUsuarios" aria-live="polite" aria-label="Tabla de usuarios registrados">
-      <thead>
-        <tr><th>Cédula</th><th>Nombre</th><th>Rol</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
-</main>
-
-  <footer style="background:#0a3a71; color:white; text-align:center; padding:1rem 2rem;">
-    © 2025 HRPL SAS - PRUEBA. Todos los derechos reservados.
-  </footer>
-
-
-<script>
-  // Datos persistentes con localStorage
-  const storage = {
-    save: (key, data) => localStorage.setItem(key, JSON.stringify(data)),
-    get: (key) => JSON.parse(localStorage.getItem(key)) || []
-  };
-
-  let usuarios = storage.get('usuarios');
-  let sesionesUsuario = JSON.parse(localStorage.getItem('sesion')) || null;
-  let citas = storage.get('citas');
-  let solicitudes = storage.get('solicitudes');
-
-
-  // Elementos UI
-  const sections = document.querySelectorAll('main > section');
-
-
-  window.cambiarSeccion = function(seccionId) {
-    sections.forEach(s => s.classList.toggle('active', s.id === seccionId));
-    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('data-target') === seccionId));
-    
-    // Controlar visibilidad de secciones
-    sections.forEach(section => {
-      section.style.display = (section.id === seccionId) ? 'block' : 'none';
-    });
-
-    // Controlar botones login/registro habilitados
-    if(seccionId === 'auth') {
-      btnLoginNav.disabled = true;
-    } else {
-      btnLoginNav.disabled = false;
+    function cambiarSeccion(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(id);
+      if(target) target.classList.add('active');
+      window.scrollTo(0,0);
     }
 
-    // Protección de rutas por Rol
-    const rutasProtegidas = {
-      'administracion': ['administrador'],
-      'informes': ['administrador', 'funcionario'],
-      'gestionCitas': ['paciente', 'administrador', 'funcionario'],
-      'solicitudDocumentos': ['paciente', 'administrador', 'funcionario']
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-target]');
+      if(btn) cambiarSeccion(btn.getAttribute('data-target'));
+    });
+
+    // --- CITAS LOGIC ---
+    function renderCitas() {
+      const container = document.getElementById('listaCitas');
+      if(!container) return;
+      const misCitas = sesionActiva ? citas.filter(c => c.usuario === sesionActiva.cedula) : [];
+      if(misCitas.length === 0) { container.innerHTML = '<p class="text-muted">No tiene citas programadas.</p>'; return; }
+      
+      container.innerHTML = `<table class="table table-sm"><thead><tr><th>Especialidad</th><th>Fecha</th><th>Hora</th><th>Acción</th></tr></thead><tbody>` + 
+        misCitas.map((c, i) => `<tr><td>${c.especialidad}</td><td>${c.fecha}</td><td>${c.hora}</td><td>
+          <button class="btn btn-sm btn-outline-warning" onclick="reagendarCita(${i})"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-sm btn-outline-danger" onclick="cancelarCita(${i})"><i class="fas fa-trash"></i></button>
+        </td></tr>`).join('') + `</tbody></table>`;
+    }
+
+    window.reagendarCita = (idx) => {
+      const nuevaFecha = prompt("Ingrese nueva fecha (YYYY-MM-DD):", citas[idx].fecha);
+      if(nuevaFecha) { citas[idx].fecha = nuevaFecha; storage.save('citas', citas); renderCitas(); }
     };
 
-    if(rutasProtegidas[seccionId]) {
-      if(!sesionesUsuario || !rutasProtegidas[seccionId].includes(sesionesUsuario.rol)) {
-        alert(`Acceso denegado para el rol: ${sesionesUsuario ? sesionesUsuario.rol : 'visitante'}`);
-        cambiarSeccion('inicio');
-        return;
-      }
-    }
-  }
+    window.cancelarCita = (idx) => {
+      if(confirm("¿Desea cancelar esta cita?")) { citas.splice(idx, 1); storage.save('citas', citas); renderCitas(); }
+    };
 
-  // Función para cerrar sesión
-  window.cerrarSesion = function() {
-    localStorage.removeItem('sesion');
-    sesionesUsuario = null;
-    alert('Sesión cerrada');
-    actualizarInterfazUsuario();
-    cambiarSeccion('inicio');
-  };
+    document.getElementById('btnAgendar').addEventListener('click', () => {
+      if(!sesionActiva) return alert('Inicie sesión');
+      citas.push({ usuario: sesionActiva.cedula, especialidad: document.getElementById('especialidadAgendar').value, fecha: document.getElementById('fechaAgendar').value, hora: document.getElementById('horaAgendar').value });
+      storage.save('citas', citas);
+      alert('Cita agendada');
+      renderCitas();
+    });
 
-  function actualizarInterfazUsuario() {
-    const btnAuth = document.querySelector('.nav-link-btn[data-target="auth"]') || document.querySelector('.nav-link-btn:last-child');
-    const btnRegistro = document.querySelector('.nav-link-btn[data-target="registro"]');
-    const adminLink = document.querySelector('[data-target="informes"]'); // Usaremos el de reportes como base para el menú admin
-    
-    if (sesionesUsuario) {
-      btnAuth.textContent = 'Cerrar Sesión';
-      btnAuth.classList.remove('btn-light');
-      btnAuth.classList.add('btn-danger');
-      btnAuth.onclick = cerrarSesion;
-      btnAuth.removeAttribute('data-target');
-      if (btnRegistro) btnRegistro.style.display = 'none';
-
-      // Mostrar opciones según Rol
-      if (sesionesUsuario.rol === 'administrador' || sesionesUsuario.rol === 'funcionario') {
-        // Podríamos habilitar un menú extra aquí en el futuro
-        console.log("Acceso administrativo detectado");
-      }
-    } else {
-      btnAuth.textContent = 'Iniciar Sesión';
-      btnAuth.classList.add('btn-light');
-      btnAuth.classList.remove('btn-danger');
-      btnAuth.onclick = null;
-      btnAuth.setAttribute('data-target', 'auth');
-      if (btnRegistro) btnRegistro.style.display = 'inline-block';
-    }
-  }
-
-
-  // Navegación Unificada
-  document.addEventListener('click', e => {
-    const targetBtn = e.target.closest('[data-target]');
-    if (targetBtn) {
+    // --- AUTH ---
+    document.getElementById('loginForm').addEventListener('submit', e => {
       e.preventDefault();
-      const targetId = targetBtn.getAttribute('data-target');
-      if (targetId) {
-        cambiarSeccion(targetId);
-        
-        // Cerrar menú mobile si está abierto
-        const navbarCollapse = document.getElementById('navbarNav');
-        if (navbarCollapse.classList.contains('show')) {
-          const bsCollapse = new bootstrap.Collapse(navbarCollapse);
-          bsCollapse.hide();
-        }
+      const u = usuarios.find(u => u.email === document.getElementById('loginEmail').value && u.password === document.getElementById('loginPassword').value);
+      if(u) { localStorage.setItem('sesion', JSON.stringify(u)); location.reload(); } else alert('Error');
+    });
+
+    document.getElementById('formRegistro').addEventListener('submit', e => {
+      e.preventDefault();
+      usuarios.push({ nombre: document.getElementById('regNombre').value, cedula: document.getElementById('regCedula').value, email: document.getElementById('regEmail').value, password: document.getElementById('regPassword').value });
+      storage.save('usuarios', usuarios);
+      alert('Registrado');
+      cambiarSeccion('auth');
+    });
+
+    function toggleChat() { 
+      const c = document.getElementById('chatBox'); 
+      const isVisible = c.style.display === 'flex';
+      c.style.display = isVisible ? 'none' : 'flex'; 
+      if(!isVisible) document.getElementById('chatInput').focus();
+    }
+
+    function sendChat() {
+      const input = document.getElementById('chatInput');
+      const body = document.getElementById('chatBody');
+      const text = input.value.trim().toLowerCase();
+      
+      if(text) {
+        // Mensaje Usuario
+        const uMsg = document.createElement('div');
+        uMsg.className = 'bubble user';
+        uMsg.textContent = input.value;
+        body.appendChild(uMsg);
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
+
+        // Respuesta Lógica del Bot
+        setTimeout(() => {
+          const bMsg = document.createElement('div');
+          bMsg.className = 'bubble bot';
+          
+          if(text.includes('cita')) {
+            bMsg.innerHTML = "Para agendar una cita, ve al menú <b>Servicios > Citas Médicas</b>. Allí podrás elegir especialidad, fecha y hora.";
+          } else if(text.includes('soat') || text.includes('accidente') || text.includes('documento')) {
+            bMsg.innerHTML = "Contamos con un módulo especial para trámites <b>SOAT</b> en el menú Servicios. Puedes solicitar Epicrisis y Formatos FURAT.";
+          } else if(text.includes('horario') || text.includes('atencion')) {
+            bMsg.innerHTML = "Nuestra sede de Urgencias atiende las <b>24 horas</b>. Las citas administrativas son de Lunes a Viernes de 7am a 5pm.";
+          } else if(text.includes('hola') || text.includes('buen')) {
+            bMsg.innerHTML = "¡Hola! Es un gusto saludarte. ¿Necesitas ayuda con citas, documentos SOAT o información institucional?";
+          } else {
+            bMsg.innerHTML = "Gracias por tu mensaje. Un asesor humano se pondrá en contacto contigo si necesitas una respuesta más detallada.";
+          }
+          
+          body.appendChild(bMsg);
+          body.scrollTop = body.scrollHeight;
+        }, 800);
       }
     }
-  });
 
-
-  // Registro Usuario
-  const formRegistro = document.getElementById('formRegistro');
-  const regError = document.getElementById('registroError');
-  const regSuccess = document.getElementById('registroSuccess');
-
-
-  formRegistro.addEventListener('submit', e => {
-    e.preventDefault();
-    regError.style.display = 'none'; regSuccess.style.display = 'none';
-
-
-    const nombre = formRegistro.regNombre.value.trim();
-    const email = formRegistro.regEmail.value.trim().toLowerCase();
-    const cedula = formRegistro.regCedula.value.trim();
-    const password = formRegistro.regPassword.value;
-
-
-    if(!nombre || !email || !cedula || !password){
-      regError.textContent = 'Todos los campos son obligatorios.';
-      regError.style.display = 'block';
-      return;
+    // Inicializar
+    renderCitas();
+    if(sesionActiva) {
+      const btn = document.querySelector('[data-target="auth"]');
+      btn.textContent = 'Cerrar Sesión';
+      btn.onclick = () => { localStorage.removeItem('sesion'); location.reload(); };
     }
-    if (!/^\d{6,15}$/.test(cedula)) {
-      regError.textContent = 'Documento inválido. Solo números (6-15 dígitos).';
-      regError.style.display = 'block';
-      return;
-    }
-    if (password.length < 6) {
-      regError.textContent = 'La contraseña debe tener mínimo 6 caracteres.';
-      regError.style.display = 'block';
-      return;
-    }
-    if(usuarios.some(u => u.email === email)){
-      regError.textContent = 'Correo ya registrado.';
-      regError.style.display = 'block';
-      return;
-    }
-    if(usuarios.some(u => u.cedula === cedula)){
-      regError.textContent = 'Documento ya registrado.';
-      regError.style.display = 'block';
-      return;
-    }
-
-
-    usuarios.push({nombre, email, cedula, password, rol:'paciente'});
-    storage.save('usuarios', usuarios);
-    regSuccess.textContent = 'Registro exitoso. Por favor, inicie sesión.';
-    regSuccess.style.display = 'block';
-    formRegistro.reset();
-
-
-    // Activar login y cambiar sección a login automáticamente
-    btnLoginNav.disabled = false;
-    cambiarSeccion('auth');
-  });
-
-
-  // Login Usuario
-  const formLogin = document.getElementById('loginForm');
-  const loginError = document.getElementById('loginError');
-  const loginSuccess = document.getElementById('loginSuccess');
-  const btnIngresarLogin = formLogin.querySelector('button');
-
-
-  // Habilitar boton login si inputs tienen contenido válido
-  function validarLoginInputs() {
-    const email = formLogin.loginEmail.value.trim();
-    const pass = formLogin.loginPassword.value;
-    btnIngresarLogin.disabled = !(email && pass.length >= 6);
-  }
-  formLogin.loginEmail.addEventListener('input', validarLoginInputs);
-  formLogin.loginPassword.addEventListener('input', validarLoginInputs);
-
-
-  formLogin.addEventListener('submit', e => {
-    e.preventDefault();
-    loginError.style.display = 'none'; loginSuccess.style.display = 'none';
-
-
-    const email = formLogin.loginEmail.value.trim().toLowerCase();
-    const pass = formLogin.loginPassword.value;
-    const usuario = usuarios.find(u => u.email === email && u.password === pass);
-
-    if (!usuario) {
-      loginError.textContent = 'Correo o contraseña incorrectos.';
-      loginError.style.display = 'block';
-      return;
-    }
-    
-    sesionesUsuario = usuario;
-    localStorage.setItem('sesion', JSON.stringify(usuario));
-    loginSuccess.textContent = `Bienvenido ${usuario.nombre}`;
-    loginSuccess.style.display = 'block';
-    formLogin.reset();
-    btnIngresarLogin.disabled = true;
-    actualizarInterfazUsuario();
-    cambiarSeccion('inicio');
-  });
-
-
-  // Gestión Citas
-  const operacionCita = document.getElementById('operacionCita');
-  const agendarContainer = document.getElementById('agendarContainer');
-  const reprogramarContainer = document.getElementById('reprogramarContainer');
-  const cancelarContainer = document.getElementById('cancelarContainer');
-
-
-  operacionCita.addEventListener('change', () => {
-    clearCitaMessages();
-    agendarContainer.style.display = 'none';
-    reprogramarContainer.style.display = 'none';
-    cancelarContainer.style.display = 'none';
-
-
-    switch(operacionCita.value) {
-      case 'agendar': agendarContainer.style.display = 'block'; break;
-      case 'reprogramar': 
-        if (!sesionesUsuario) {
-          alert('Debe iniciar sesión para continuar.');
-          operacionCita.value = '';
-          return;
-        }
-        reprogramarContainer.style.display = 'block'; 
-        cargarCitasSelect('selectCitaReprog');
-        break;
-      case 'cancelar':
-        if (!sesionesUsuario) {
-          alert('Debe iniciar sesión para continuar.');
-          operacionCita.value = '';
-          return;
-        }
-        cancelarContainer.style.display = 'block'; 
-        cargarCitasSelect('selectCitaCancel');
-        break;
-    }
-  });
-
-
-  // Fecha mínima hoy para inputs date
-  const hoyISO = new Date().toISOString().split('T')[0];
-  document.getElementById('fechaAgendar').setAttribute('min', hoyISO);
-  document.getElementById('nuevaFechaReprog').setAttribute('min', hoyISO);
-  document.getElementById('fechaAccidenteSolic').setAttribute('max', hoyISO);
-
-
-  // Función para limpiar mensajes en gestión citas
-  function clearCitaMessages(){
-    document.getElementById('citasError').style.display = 'none';
-    document.getElementById('citasSuccess').style.display = 'none';
-  }
-
-
-  // Cargar citas en selects para reprogramar y cancelar
-  function cargarCitasSelect(elementId) {
-    const select = document.getElementById(elementId);
-    select.innerHTML = '';
-    const citasUsuario = citas.filter(c => c.cedula === sesionesUsuario.cedula);
-    if (citasUsuario.length === 0){
-      const option = document.createElement('option');
-      option.textContent = 'No tiene citas registradas';
-      option.disabled = true;
-      option.selected = true;
-      select.appendChild(option);
-      return;
-    }
-    citasUsuario.forEach((cita, idx) => {
-      const option = document.createElement('option');
-      option.value = idx;
-      option.textContent = `Fecha: ${cita.fecha} ${cita.hora}, Médico: ${cita.medico}, Especialidad: ${cita.especialidad}`;
-      select.appendChild(option);
-    });
-  }
-
-
-  // Agendar cita
-  document.getElementById('btnAgendar').addEventListener('click', () => {
-    clearCitaMessages();
-    if (!sesionesUsuario) {
-      alert('Debe iniciar sesión para agendar cita.');
-      return;
-    }
-    const fecha = document.getElementById('fechaAgendar').value;
-    const hora = document.getElementById('horaAgendar').value;
-    const medico = document.getElementById('medicoAgendar').value.trim();
-    const especialidad = document.getElementById('especialidadAgendar').value.trim();
-    const errorDiv = document.getElementById('citasError');
-    const successDiv = document.getElementById('citasSuccess');
-
-
-    if(!fecha || !hora || !medico || !especialidad){
-      errorDiv.textContent = 'Por favor complete todos los campos para agendar cita.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-    if(new Date(fecha + 'T' + hora) < new Date()){
-      errorDiv.textContent = 'La fecha y hora no pueden ser anteriores a la actual.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-    citas.push({
-      cedula: sesionesUsuario.cedula,
-      fecha: fecha,
-      hora: hora,
-      medico,
-      especialidad,
-      estado: 'agendada'
-    });
-    storage.save('citas', citas);
-    successDiv.textContent = 'Cita agendada correctamente.';
-    successDiv.style.display = 'block';
-
-
-    // Limpiar campos
-    document.getElementById('fechaAgendar').value = '';
-    document.getElementById('horaAgendar').value = '';
-    document.getElementById('medicoAgendar').value = '';
-    document.getElementById('especialidadAgendar').value = '';
-    operacionCita.value = '';
-    agendarContainer.style.display = 'none';
-    actualizarInformes();
-  });
-
-
-  // Reprogramar cita
-  document.getElementById('btnReprogramar').addEventListener('click', () => {
-    clearCitaMessages();
-    const selectCita = document.getElementById('selectCitaReprog');
-    const nuevaFecha = document.getElementById('nuevaFechaReprog').value;
-    const nuevoMedico = document.getElementById('nuevoMedicoReprog').value.trim();
-    const errorDiv = document.getElementById('citasError');
-    const successDiv = document.getElementById('citasSuccess');
-
-
-    if(selectCita.selectedIndex < 0 || !nuevaFecha){
-      errorDiv.textContent = 'Seleccione una cita y nueva fecha para reprogramar.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-    if(new Date(nuevaFecha) < new Date()){
-      errorDiv.textContent = 'La nueva fecha no puede ser anterior a hoy.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-    const idx = selectCita.value;
-    const citasUsuario = citas.filter(c => c.cedula === sesionesUsuario.cedula);
-    const cita = citasUsuario[idx];
-
-    if (!cita) {
-      errorDiv.textContent = 'Cita seleccionada no válida.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    const indexGlobal = citas.findIndex(c => c.cedula === sesionesUsuario.cedula && c.fecha === cita.fecha && c.hora === cita.hora);
-    if(indexGlobal !== -1){
-      citas[indexGlobal].fecha = nuevaFecha;
-      citas[indexGlobal].medico = nuevoMedico || citas[indexGlobal].medico;
-      citas[indexGlobal].estado = 'reprogramada';
-      storage.save('citas', citas);
-      successDiv.textContent = 'Cita reprogramada correctamente.';
-    }
-    successDiv.style.display = 'block';
-
-
-    operacionCita.value = '';
-    reprogramarContainer.style.display = 'none';
-    actualizarInformes();
-  });
-
-
-  // Cancelar cita
-  document.getElementById('btnCancelar').addEventListener('click', () => {
-    clearCitaMessages();
-    const selectCita = document.getElementById('selectCitaCancel');
-    const motivo = document.getElementById('motivoCancel').value.trim();
-    const errorDiv = document.getElementById('citasError');
-    const successDiv = document.getElementById('citasSuccess');
-
-
-    if(selectCita.selectedIndex < 0 || !motivo){
-      errorDiv.textContent = 'Seleccione una cita y motivo para cancelar.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-    const idx = selectCita.value;
-    const citasUsuario = citas.filter(c => c.cedula === sesionesUsuario.cedula);
-    const cita = citasUsuario[idx];
-
-    if (!cita) {
-      errorDiv.textContent = 'Cita seleccionada no válida.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    const indexGlobal = citas.findIndex(c => c.cedula === sesionesUsuario.cedula && c.fecha === cita.fecha && c.hora === cita.hora);
-    if(indexGlobal !== -1){
-      citas.splice(indexGlobal, 1);
-      storage.save('citas', citas);
-      successDiv.textContent = 'Cita cancelada correctamente.';
-    }
-    successDiv.style.display = 'block';
-
-
-    // Limpiar motivo textarea y select
-    document.getElementById('motivoCancel').value = '';
-    cargarCitasSelect('selectCitaCancel');
-    operacionCita.value = '';
-    cancelarContainer.style.display = 'none';
-    actualizarInformes();
-  });
-
-
-  // Solicitud de Documentos
-  const formSolicitud = document.getElementById('formSolicitud');
-  const docError = document.getElementById('docError');
-  const docSuccess = document.getElementById('docSuccess');
-
-
-  document.getElementById('btnSolicitarDoc').addEventListener('click', () => {
-    docError.style.display = 'none'; docSuccess.style.display = 'none';
-
-
-    const docIdentidad = document.getElementById('docIdentidadSolic').value.trim();
-    const nombre = document.getElementById('nombreSolicitante').value.trim();
-    const correo = document.getElementById('correoSolicitante').value.trim();
-    const telefono = document.getElementById('telefonoSolicitante').value.trim();
-    const fechaAccidente = document.getElementById('fechaAccidenteSolic').value;
-    const tipoDoc = document.getElementById('tipoDocSolicitado').value;
-
-
-    if(!docIdentidad || !nombre || !correo || !telefono || !fechaAccidente || !tipoDoc){
-      docError.textContent = 'Complete todos los campos para solicitar documento.';
-      docError.style.display = 'block';
-      return;
-    }
-    if(!/^\d{6,15}$/.test(docIdentidad)){
-      docError.textContent = 'Documento de identidad inválido.';
-      docError.style.display = 'block';
-      return;
-    }
-    if(!/\S+@\S+\.\S+/.test(correo)){
-      docError.textContent = 'Correo electrónico inválido.';
-      docError.style.display = 'block';
-      return;
-    }
-    solicitudes.push({
-      cedula: docIdentidad,
-      nombre,
-      correo,
-      telefono,
-      fechaAccidente,
-      tipoDoc,
-      estado: 'pendiente',
-      id: Date.now()
-    });
-    storage.save('solicitudes', solicitudes);
-
-    docSuccess.textContent = 'Solicitud enviada correctamente.';
-    docSuccess.style.display = 'block';
-
-
-    formSolicitud.reset();
-    actualizarInformes();
-  });
-
-
-  // Administración Usuarios
-  const formAdmin = document.getElementById('formAdmin');
-  const adminError = document.getElementById('adminError');
-  const adminSuccess = document.getElementById('adminSuccess');
-
-
-  document.getElementById('btnCrearUsuario').addEventListener('click', () => {
-    adminError.style.display = 'none'; adminSuccess.style.display = 'none';
-
-
-    const ced = document.getElementById('nuevoUsuarioCedula').value.trim();
-    const nom = document.getElementById('nuevoUsuarioNombre').value.trim();
-    const rol = document.getElementById('nuevoUsuarioRol').value;
-
-
-    if(!ced || !nom || !rol){
-      adminError.textContent = 'Complete todos los campos para crear usuario.';
-      adminError.style.display = 'block';
-      return;
-    }
-    if(!/^\d{6,15}$/.test(ced)){
-      adminError.textContent = 'Cédula inválida.';
-      adminError.style.display = 'block';
-      return;
-    }
-    if(usuarios.some(u => u.cedula === ced)){
-      adminError.textContent = 'Usuario con esta cédula ya existe.';
-      adminError.style.display = 'block';
-      return;
-    }
-    usuarios.push({cedula: ced, nombre: nom, rol});
-    storage.save('usuarios', usuarios);
-    adminSuccess.textContent = 'Usuario creado exitosamente.';
-    adminSuccess.style.display = 'block';
-
-
-    document.getElementById('nuevoUsuarioCedula').value = '';
-    document.getElementById('nuevoUsuarioNombre').value = '';
-    document.getElementById('nuevoUsuarioRol').value = '';
-
-
-    actualizarTablaUsuarios();
-    actualizarInformes();
-  });
-
-
-  function actualizarTablaUsuarios(){
-    const tbody = document.querySelector('#tablaUsuarios tbody');
-    tbody.innerHTML = '';
-    usuarios.forEach(u => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${u.cedula}</td><td>${u.nombre}</td><td>${u.rol}</td>`;
-      tbody.appendChild(tr);
-    });
-  }
-
-
-  // Act. conteos informes
-  function actualizarInformes(){
-    document.getElementById('totalCitas').textContent = citas.length;
-    document.getElementById('totalSolicitudes').textContent = solicitudes.length;
-    document.getElementById('totalUsuarios').textContent = usuarios.length;
-    
-    // Conteo de especialidades únicas
-    const especialidades = [...new Set(citas.map(c => c.especialidad).filter(e => e))];
-    document.getElementById('totalEspecialidades').textContent = especialidades.length;
-  }
-
-
-  // Inicializar
-  actualizarInterfazUsuario();
-  cambiarSeccion('inicio');
-  actualizarInformes();
-  actualizarTablaUsuarios();
-</script>
-
-  <script src="js/bootstrap.bundle.min.js"></script>
+  </script>
 </body>
-</html> 
+</html>
