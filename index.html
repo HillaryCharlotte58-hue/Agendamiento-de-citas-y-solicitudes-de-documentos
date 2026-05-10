@@ -1,58 +1,3 @@
-
-
-He protegido rutas y botones según roles, y mejoré la gestión de sesiones en index.html, facilitando control de acceso y cierre de sesión. Próximo paso: seguir con la migración modular.
-
-La navegación ahora usa Bootstrap 5, mejorando el diseño y la responsividad, y los eventos se adaptaron para gestionar los cambios de sección y sesión. Próximo paso: migrar módulos y almacenamiento.
-
-He mejorado el diseño con Bootstrap 5, haciendo la navegación más responsiva y atractiva, y actualicé estilos para mantener funcionalidad. Próximo paso: migrar módulos.
-
-Lite
-He completado la migración modular y la mejora visual de tu proyecto. He realizado 4 commits en tu repositorio local cubriendo todas las fases acordadas:
-Fase 1: Persistencia — Conecté localStorage para que usuarios, citas y solicitudes no se pierdan al recargar.
-Fase 2: Autenticación — Mejoré el login y registro con persistencia y manejo de errores.
-Fase 3: Citas — El módulo de citas ahora es funcional y persistente.
-Fase 4: Reportes — Corregí IDs duplicados y mejoré el conteo de especialidades.
-Fase 5: Seguridad — Implementé protección de rutas (solo administradores ven el panel de control) y gestión de sesión (Login/Logout).
-Fase 6: Visual — Integré Bootstrap 5, rediseñé la navegación (ahora es responsive y profesional) y corregí errores de CSS.
-Nota importante: He configurado un usuario de Git temporal para los commits. Ya puedes hacer git push a tu repositorio de GitHub para subir todos los cambios.
-¿Te gustaría que revise algún detalle adicional o prefieres que terminemos aquí?
-muestrame el codigo final de index como el del resto de los modulos
-Lite
-Claro que sí. He consolidado y organizado todo el código para que sea profesional, modular y fácil de mantener. A continuación te presento el código final de los archivos principales del proyecto.
-He integrado la persistencia con localStorage, mejorado la seguridad y diseñado una navegación responsive con Bootstrap 5; el proyecto está listo para futuras migraciones module por module.
-
-Lite
-Aquí tienes el código final organizado y mejorado. He adjuntado los archivos principales para que puedas revisarlos y descargarlos.
-Resumen de cambios aplicados:
-index.html: Se rediseñó completamente con Bootstrap 5, incluyendo una navegación responsive, una estética más limpia y profesional, y la unificación de toda la lógica funcional en un script robusto que ahora soporta persistencia.
-storage.js: Implementado para centralizar el manejo de localStorage, asegurando que los datos de usuarios, citas y sesiones se mantengan tras recargar la página.
-auth.js: Módulo mejorado para gestionar el inicio de sesión, validación de credenciales y redirección dinámica según el rol del usuario.
-citas.js: Funciones modulares para agendar, reprogramar y cancelar citas médicas, vinculadas directamente con el sistema de persistencia.
-He realizado los commits correspondientes en tu repositorio local. Ya puedes ejecutar git push para sincronizar estos cambios con tu cuenta de GitHub.
-¿Hay algo más en lo que pueda ayudarte con este proyecto?
-index.html
-Código · 36.43 KB
-storage.js
-Código · 340 B
-auth.js
-Código · 1.79 KB
-citas.js
-Código · 1.05 KB
-Ver todos los archivos en esta tarea
-Al integrar la persistencia en localStorage, he asegurado que los datos de usuarios, citas y sesiones se mantengan al recargar. La fase 1 está casi finalizada para avanzar a módulo de autenticación.
-
-Tarea completada
-¿Cómo fue este resultado?
-Seguimientos sugeridos
-
-
-
-
-Ordenador de Manus
-Manus está usando Editor
-Leyendo archivo
-proyecto/MAQUETA PROYECTO 2/index.html
-index.html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -238,7 +183,7 @@ index.html
         <img src="css/imagenes/DRA.jpg" alt="Personal Médico" class="hero-img img-fluid" />
         <div class="row justify-content-center">
           <div class="col-md-10 col-lg-8">
-            <p class="lead text-primary mb-4" style="text-align: justify;"> 
+            <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;"> 
               Somos una institución fundamentada en calidad, pertinencia, seguridad y alto sentido humanístico, con un liderazgo basado en la innovación y mejora continua de los procesos, trabajando para estar más cerca de nuestros usuarios.
             </p>
           </div>
@@ -258,18 +203,15 @@ index.html
         <div class="row justify-content-center">
           <div class="col-md-8">
             <div class="card border-0 shadow-sm p-4">
-              <p class="text-primary fs-5" style="text-align: justify;">
+              <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;"> 
                 Nuestra plataforma estratégica se basa en la innovación constante, el compromiso con la calidad y el enfoque en la satisfacción del usuario, garantizando así un servicio de salud integral.
               </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Política de Seguridad Paciente -->
     <section id="politica_seguridad_paciente" aria-label="Política de Seguridad Paciente" style="display:none;">
       <h2>Política de Seguridad Paciente</h2>
+      <div class="row justify-content-center">
+          <div class="col-md-8">
+            <div class="card border-0 shadow-sm p-4">
       <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
         En HRPL SAS priorizamos la seguridad del paciente con protocolos estrictos y capacitación continua para nuestro personal, asegurando un entorno seguro y confiable.
       </p>
@@ -290,393 +232,12 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
         HRPL SAS mantiene contratos transparentes y responsables con proveedores y aliados estratégicos para ofrecer servicios de calidad y cumplir con las normativas vigentes.
       </p>
     </section>
-
-  <!-- Registro -->
-  <section id="registro" aria-label="Registro de usuario">
-    <h2>Registro de Usuario</h2>
-    <div id="registroError" class="error-message" style="display:none;"></div>
-    <div id="registroSuccess" class="success-message" style="display:none;"></div>
-    <form id="formRegistro" class="mx-auto" style="max-width: 450px;" novalidate>
-      <div class="mb-3">
-        <label for="regNombre" class="form-label">Nombre completo</label>
-        <input type="text" id="regNombre" name="regNombre" class="form-control" autocomplete="name" required placeholder="Tu nombre completo" />
-      </div>
-      <div class="mb-3">
-        <label for="regEmail" class="form-label">Correo electrónico</label>
-        <input type="email" id="regEmail" name="regEmail" class="form-control" autocomplete="email" required placeholder="correo@ejemplo.com" />
-      </div>
-      <div class="mb-3">
-        <label for="regCedula" class="form-label">Número de documento</label>
-        <input type="text" id="regCedula" name="regCedula" class="form-control" maxlength="15" required placeholder="Número de documento" />
-      </div>
-      <div class="mb-3">
-        <label for="regPassword" class="form-label">Contraseña</label>
-        <input type="password" id="regPassword" name="regPassword" class="form-control" autocomplete="new-password" required placeholder="Crear contraseña" />
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Registrar</button>
-    </form>
-  </section>
-
-
-  <!-- Autenticación -->
-  <section id="auth" aria-label="Área de inicio de sesión">
-    <h2>Iniciar Sesión</h2>
-    <div id="loginError" class="error-message" style="display:none;"></div>
-    <div id="loginSuccess" class="success-message" style="display:none;"></div>
-    <form id="loginForm" novalidate>
-      <label for="loginEmail">Correo electrónico</label>
-      <input type="email" id="loginEmail" name="loginEmail" autocomplete="username" required placeholder="ejemplo@correo.com" />
-      
-      <label for="loginPassword">Contraseña</label>
-      <input type="password" id="loginPassword" name="loginPassword" autocomplete="current-password" required placeholder="********" />
-      
-      <button type="submit" disabled>Ingresar</button>
-    </form>
-  </section>
-
-
-  <!-- Gestión de Citas -->
-  <section id="gestionCitas" aria-label="Gestión de citas médicas">
-    <h2>Gestión de Citas</h2>
-    <div id="citasError" class="error-message" style="display:none;"></div>
-    <div id="citasSuccess" class="success-message" style="display:none;"></div>
-    <form id="formCitas" novalidate>
-      <label for="operacionCita">Seleccione operación</label>
-      <select id="operacionCita" required>
-        <option value="" disabled selected>Seleccione...</option>
-        <option value="agendar">Agendar Cita</option>
-        <option value="reprogramar">Reprogramar Cita</option>
-        <option value="cancelar">Cancelar Cita</option>
-      </select>
-
-
-      <!-- Agendar -->
-      <div id="agendarContainer" style="display:none; margin-top:1rem;">
-        <label for="fechaAgendar">Fecha</label>
-        <input type="date" id="fechaAgendar" min="" />
-        <label for="horaAgendar">Hora</label>
-        <input type="time" id="horaAgendar" />
-        <label for="medicoAgendar">Médico</label>
-        <input type="text" id="medicoAgendar" placeholder="Nombre del médico" />
-        <label for="especialidadAgendar">Especialidad</label>
-        <input type="text" id="especialidadAgendar" placeholder="Ej.: Cardiología" />
-        <p style="margin-top: 0.8rem; font-style: italic; color: #064075;">
-          <strong>Nota:</strong> Por favor, lleve sus documentos de identidad y resultados médicos anteriores el día de la cita.
-        </p>
-        <button type="button" id="btnAgendar">Agendar Cita</button>
-      </div>
-
-
-      <!-- Reprogramar -->
-      <div id="reprogramarContainer" style="display:none; margin-top:1rem;">
-        <label for="selectCitaReprog">Seleccione cita</label>
-        <select id="selectCitaReprog" aria-describedby="infoReprog"></select>
-        <div id="infoReprog" style="font-size: 0.9rem; color:#444; margin: 0.2rem 0 0.8rem 0;">Seleccione una cita para reprogramar.</div>
-        <label for="nuevaFechaReprog">Nueva fecha</label>
-        <input type="date" id="nuevaFechaReprog" min="" />
-        <label for="nuevoMedicoReprog">Nuevo médico</label>
-        <input type="text" id="nuevoMedicoReprog" placeholder="Deje vacío para mismo médico" />
-        <button type="button" id="btnReprogramar">Reprogramar Cita</button>
-      </div>
-
-
-      <!-- Cancelar -->
-      <div id="cancelarContainer" style="display:none; margin-top:1rem;">
-        <label for="selectCitaCancel">Seleccione cita</label>
-        <select id="selectCitaCancel"></select>
-        <label for="motivoCancel">Motivo cancelación</label>
-        <textarea id="motivoCancel" placeholder="Escribe el motivo de la cancelación"></textarea>
-        <button type="button" id="btnCancelar">Cancelar Cita</button>
-      </div>
-    </form>
-  </section>
-
-
-  <!-- Solicitud de Documentos -->
-  <section id="solicitudDocumentos" aria-label="Solicitud de documentos de accidentes de tránsito">
-    <h2>Solicitud de Documentos</h2>
-    <div id="docError" class="error-message" style="display:none;"></div>
-    <div id="docSuccess" class="success-message" style="display:none;"></div>
-    <form id="formSolicitud" novalidate>
-      <label for="docIdentidadSolic">Documento de identidad</label>
-      <input type="text" id="docIdentidadSolic" maxlength="15" placeholder="Número de documento" required />
-      
-      <label for="nombreSolicitante">Nombre completo</label>
-      <input type="text" id="nombreSolicitante" placeholder="Nombre completo" required />
-      
-      <label for="correoSolicitante">Correo electrónico</label>
-      <input type="email" id="correoSolicitante" placeholder="Correo electrónico" required />
-      
-      <label for="telefonoSolicitante">Teléfono</label>
-      <input type="text" id="telefonoSolicitante" placeholder="Teléfono de contacto" required />
-      
-      <label for="fechaAccidenteSolic">Fecha del accidente o atención</label>
-      <input type="date" id="fechaAccidenteSolic" max="" required />
-      
-      <label for="tipoDocSolicitado">Tipo de documento requerido</label>
-      <select id="tipoDocSolicitado" required>
-        <option value="" disabled selected>Seleccione...</option>
-        <option value="informe">Informe de accidente</option>
-        <option value="certificado">Certificado SOAT</option>
-        <option value="factura">Factura de venta</option>
-        <option value="otro">Otro</option>
-      </select>
-      <button type="button" id="btnSolicitarDoc">Solicitar Documento</button>
-    </form>
-  </section>
-
-
-  <!-- Informes -->
-  <section id="informes" aria-label="Informes y reportes">
-    <h2>Reportes Generales</h2>
-    <p style="text-align:center; margin-bottom: 1rem; color:#064075;">
-      Resumen de citas, solicitudes y usuarios.
-    </p>
-    <table
-(Content truncated due to size limit. Use line ranges to read remaining content)
-
-
-en vivo
-
-Saltar a en vivo
-index.html
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HRPL SAS - Sistema de Gestión de Salud</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <style>
-    :root {
-      --primary-color: #0a3a71;
-      --secondary-color: #064075;
-      --accent-color: #8ab7f9;
-      --bg-light: #f9fbfd;
-      --text-dark: #0f2c60;
-    }
-
-    body {
-      background-color: var(--bg-light);
-      color: var(--text-dark);
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      background: var(--primary-color);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .navbar-brand {
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: white !important;
-    }
-
-    .nav-link {
-      color: rgba(255,255,255,0.8) !important;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-
-    .nav-link:hover, .nav-link.active {
-      color: white !important;
-      background: rgba(255,255,255,0.1);
-      border-radius: 4px;
-    }
-
-    main {
-      flex: 1;
-      padding: 3rem 0;
-    }
-
-    section {
-      display: none;
-      background: white;
-      padding: 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-      animation: fadeIn 0.4s ease-out;
-    }
-
-    section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h2 {
-      color: var(--primary-color);
-      font-weight: 700;
-      margin-bottom: 2rem;
-      position: relative;
-      padding-bottom: 10px;
-    }
-
-    h2::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 4px;
-      background: var(--accent-color);
-      border-radius: 2px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-      border: none;
-      padding: 0.6rem 1.5rem;
-      font-weight: 600;
-    }
-
-    .form-label {
-      font-weight: 600;
-      color: var(--primary-color);
-    }
-
-    .table thead th {
-      background-color: var(--bg-light);
-      color: var(--primary-color);
-      border-bottom: 2px solid var(--accent-color);
-    }
-
-    .error-message {
-      background-color: #fff5f5;
-      color: #c53030;
-      border-left: 4px solid #c53030;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      border-radius: 4px;
-    }
-
-    .success-message {
-      background-color: #f0fff4;
-      color: #2f855a;
-      border-left: 4px solid #2f855a;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      border-radius: 4px;
-    }
-
-    .hero-img {
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      margin-bottom: 2rem;
-      max-width: 100%;
-      height: auto;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <nav class="navbar navbar-expand-lg navbar-dark container">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#" onclick="cambiarSeccion('inicio')">HRPL SAS</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link active" href="#" data-target="inicio">Inicio</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="instDropdown" role="button" data-bs-toggle="dropdown">Institucional</a>
-              <ul class="dropdown-menu">
-                <li><button class="dropdown-item nav-link-drop" data-target="plataforma_estrategica">Plataforma Estratégica</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="politica_seguridad_paciente">Política de Seguridad Paciente</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="modelo_prestacion_servicios">Modelo de Prestación de Servicios</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="contratos">Contratos</button></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="servDropdown" role="button" data-bs-toggle="dropdown">Servicios</a>
-              <ul class="dropdown-menu">
-                <li><button class="dropdown-item nav-link-drop" data-target="gestionCitas">Citas</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="solicitudDocumentos">Documentos</button></li>
-                <li><button class="dropdown-item nav-link-drop" data-target="informes">Reportes</button></li>
-              </ul>
-            </li>
-          </ul>
-          <div class="d-flex gap-2">
-            <button class="btn btn-outline-light nav-link-btn" data-target="registro">Registrarse</button>
-            <button class="btn btn-light nav-link-btn" data-target="auth">Iniciar Sesión</button>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </header>
-
-  <main class="container">
-    <!-- Inicio -->
-    <section id="inicio" class="active" aria-label="Información de la empresa">
-      <div class="text-center">
-        <h2>Bienvenido a HRPL SAS</h2>
-        <img src="css/imagenes/DRA.jpg" alt="Personal Médico" class="hero-img img-fluid" />
-        <div class="row justify-content-center">
-          <div class="col-md-10 col-lg-8">
-            <p class="lead text-primary mb-4" style="text-align: justify;"> 
-              Somos una institución fundamentada en calidad, pertinencia, seguridad y alto sentido humanístico, con un liderazgo basado en la innovación y mejora continua de los procesos, trabajando para estar más cerca de nuestros usuarios.
-            </p>
-          </div>
-        </div>
-      </div>
-      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;"> 
-        Contamos con un equipo multidisciplinario de profesionales, especialistas y subespecialistas en las diferentes ramas de la salud, para brindar una atención integral; tenemos un área exclusiva para maternidad, además de los servicios de hospitalización en unidad de cuidados intensivos (UCI) adultos, pediátrica, neonatal y atención básica (hospitalización), lo que nos permite atender los procesos diagnósticos y terapéuticos de los neonatos, niños, jóvenes y adultos.
-      </p>
-      <p style="max-width:650px; margin:0 auto 2rem auto; color: #234a7a; font-size:1.1rem; line-height:1.6;text-align: justify;">
-        Nuestro compromiso es ofrecer un servicio confiable, ágil y personalizado para garantizar la mejor experiencia en salud para nuestros pacientes.
-      </p>
-    </section>
-    <!-- Plataforma Estrategica -->
-    <section id="plataforma_estrategica" aria-label="Plataforma Estratégica">
-      <div class="text-center">
-        <h2>Plataforma Estratégica</h2>
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div class="card border-0 shadow-sm p-4">
-              <p class="text-primary fs-5" style="text-align: justify;">
-                Nuestra plataforma estratégica se basa en la innovación constante, el compromiso con la calidad y el enfoque en la satisfacción del usuario, garantizando así un servicio de salud integral.
-              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- Política de Seguridad Paciente -->
-    <section id="politica_seguridad_paciente" aria-label="Política de Seguridad Paciente" style="display:none;">
-      <h2>Política de Seguridad Paciente</h2>
-      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
-        En HRPL SAS priorizamos la seguridad del paciente con protocolos estrictos y capacitación continua para nuestro personal, asegurando un entorno seguro y confiable.
-      </p>
-    </section>
-
-    <!-- Modelo de Prestación de Servicios -->
-    <section id="modelo_prestacion_servicios" aria-label="Modelo de Prestación de Servicios" style="display:none;">
-      <h2>Modelo de Prestación de Servicios</h2>
-      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
-Nuestro modelo de prestación se fundamenta en la atención personalizada, integración multidisciplinaria y procesos efectivos para atender las necesidades en salud con excelencia.
-      </p>
-    </section>
-
-    <!-- Contratos -->
-    <section id="contratos" aria-label="Contratos" style="display:none;">
-      <h2>Contratos</h2>
-      <p style="max-width:650px; margin:1rem auto; color: #0d4891; font-size:1.1rem; line-height:1.6; text-align: justify;">
-        HRPL SAS mantiene contratos transparentes y responsables con proveedores y aliados estratégicos para ofrecer servicios de calidad y cumplir con las normativas vigentes.
-      </p>
-    </section>
+    
 
   <!-- Registro -->
   <section id="registro" aria-label="Registro de usuario">
@@ -1043,19 +604,14 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
 
     const email = formLogin.loginEmail.value.trim().toLowerCase();
     const pass = formLogin.loginPassword.value;
-    const usuario = usuarios.find(u => u.email === email);
-
+    const usuario = usuarios.find(u => u.email === email && u.password === pass);
 
     if (!usuario) {
-      loginError.textContent = 'Usuario no registrado.';
+      loginError.textContent = 'Correo o contraseña incorrectos.';
       loginError.style.display = 'block';
       return;
     }
-    if (usuario.password !== pass) {
-      loginError.textContent = 'Contraseña incorrecta.';
-      loginError.style.display = 'block';
-      return;
-    }
+    
     sesionesUsuario = usuario;
     localStorage.setItem('sesion', JSON.stringify(usuario));
     loginSuccess.textContent = `Bienvenido ${usuario.nombre}`;
@@ -1417,4 +973,3 @@ Nuestro modelo de prestación se fundamenta en la atención personalizada, integ
   <script src="js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 
-Ayuda para finalizar proyecto de software módulo por módulo - Manus

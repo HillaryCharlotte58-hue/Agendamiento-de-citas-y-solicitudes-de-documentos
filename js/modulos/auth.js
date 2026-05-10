@@ -3,38 +3,44 @@ import { saveData, getData } from './storage.js';
 let usuarios = getData('usuarios');
 let sesion = null;
 
-export function initAuth() {
-    const formLogin = document.getElementById('loginForm');
+export function login(email, password) {
+    const usuarios = getData('usuarios');
+    const user = usuarios.find(u => u.email === email.toLowerCase() && u.password === password);
 
-    formLogin.addEventListener('submit', (e) => {
-        e.preventDefault();
+    if (!user) return { success: false, message: 'Usuario o contraseña incorrectos' };
 
-        const email = formLogin.loginEmail.value.trim();
-        const password = formLogin.loginPassword.value;
+    localStorage.setItem('sesion', JSON.stringify(user));
+    return { success: true, user };
+}
 
-        const user = usuarios.find(u => u.email === email && u.password === password);
+export function registrar(datos) {
+    let usuarios = getData('usuarios');
 
-        if (!user) {
-            const loginError = document.getElementById('loginError');
-            loginError.textContent = 'Credenciales incorrectas';
-            loginError.style.display = 'block';
-            return;
-        }
+    if (usuarios.some(u => u.email === datos.email.toLowerCase())) {
+        return { success: false, message: 'El correo ya está registrado' };
+    }
+    if (usuarios.some(u => u.cedula === datos.cedula)) {
+        return { success: false, message: 'El documento ya está registrado' };
+    }
 
-        sesion = user;
-        localStorage.setItem('sesion', JSON.stringify(user));
-        
-        const loginSuccess = document.getElementById('loginSuccess');
-        loginSuccess.textContent = `Bienvenido ${user.nombre}`;
-        loginSuccess.style.display = 'block';
-        
-        // Simular el cambio de sección que hace el index.html
-        if (window.cambiarSeccion) {
-            window.cambiarSeccion('inicio');
-        } else {
-            mostrarDashboard(user);
-        }
-    });
+    const nuevoUsuario = {
+        ...datos,
+        email: datos.email.toLowerCase(),
+        rol: datos.rol || 'paciente'
+    };
+
+    usuarios.push(nuevoUsuario);
+    saveData('usuarios', usuarios);
+    return { success: true, user: nuevoUsuario };
+}
+
+export function obtenerSesion() {
+    return JSON.parse(localStorage.getItem('sesion'));
+}
+
+export function cerrarSesion() {
+    localStorage.removeItem('sesion');
+    if (window.location.reload) window.location.reload();
 }
 
 function mostrarDashboard(user) {
