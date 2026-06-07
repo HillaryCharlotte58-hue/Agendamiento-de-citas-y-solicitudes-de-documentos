@@ -13,25 +13,26 @@ export function login(email, password) {
     return { success: true, user };
 }
 
-export function registrar(datos) {
-    let usuarios = getData('usuarios');
+export async function registrar(datos) {
 
-    if (usuarios.some(u => u.email === datos.email.toLowerCase())) {
-        return { success: false, message: 'El correo ya está registrado' };
-    }
-    if (usuarios.some(u => u.cedula === datos.cedula)) {
-        return { success: false, message: 'El documento ya está registrado' };
-    }
+    const formData = new FormData();
 
-    const nuevoUsuario = {
-        ...datos,
-        email: datos.email.toLowerCase(),
-        rol: datos.rol || 'paciente'
-    };
+    formData.append("nombre", datos.nombre);
+    formData.append("cedula", datos.cedula);
+    formData.append("correo", datos.email);
+    formData.append("password", datos.password);
 
-    usuarios.push(nuevoUsuario);
-    saveData('usuarios', usuarios);
-    return { success: true, user: nuevoUsuario };
+    const respuesta = await fetch(
+        "backend/registrar.php",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const resultado = await respuesta.json();
+
+    return resultado;
 }
 
 export function obtenerSesion() {
