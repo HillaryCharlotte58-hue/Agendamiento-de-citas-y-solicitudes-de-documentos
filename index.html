@@ -204,7 +204,7 @@
           <div class="col-md-5">
             <div class="card p-4 shadow-sm">
               <h5 class="mb-4">Agendar Nueva Cita</h5>
-              <div class="mb-3"><label class="form-label">Especialidad</label><select id="especialidadAgendar" class="form-select"><option>Medicina General</option><option>Pediatría</option><option>Cardiología</option></select></div>
+              <div class="mb-3"><label class="form-label">Especialidad</label><select id="especialidadAgendar" class="form-select"><option>Medicina General</option><option>Pediatría</option><option>Cardiología</option><option>Neurocirugía</option><option>Urología</option><option>Ginecología</option><option>Ortopedia</option><option>Medicina Interna</option><option>Toxicología</option><option>Medicina del dolor</option><option>Psicología</option><option>Psiquiatría</option><option>Genética</option></select></div>
               <div class="mb-3"><label class="form-label">Fecha</label><input type="date" id="fechaAgendar" class="form-control"></div>
               <div class="mb-3"><label class="form-label">Hora</label><input type="time" id="horaAgendar" class="form-control"></div>
               <button class="btn btn-primary w-100" id="btnAgendar">Agendar Cita</button>
@@ -328,15 +328,6 @@
         </td></tr>`).join('') + `</tbody></table>`;
     }
 
-    window.reagendarCita = (idx) => {
-      const nuevaFecha = prompt("Ingrese nueva fecha (YYYY-MM-DD):", citas[idx].fecha);
-      if(nuevaFecha) { citas[idx].fecha = nuevaFecha; storage.save('citas', citas); renderCitas(); }
-    };
-
-    window.cancelarCita = (idx) => {
-      if(confirm("¿Desea cancelar esta cita?")) { citas.splice(idx, 1); storage.save('citas', citas); renderCitas(); }
-    };
-
     document.getElementById('btnAgendar').addEventListener('click', async () => {
 
     const sesion = JSON.parse(localStorage.getItem('sesion'));
@@ -355,6 +346,73 @@ document.getElementById('fechaAgendar').value);
 console.log("Hora:",
 document.getElementById('horaAgendar').value);
 
+async function cargarCitas(){
+
+    const sesion =
+    JSON.parse(localStorage.getItem('sesion'));
+
+    const respuesta =
+    await fetch(
+        'backend/listar_citas.php?cedula=' +
+        sesion.cedula
+    );
+
+    const citas =
+    await respuesta.json();
+
+    let html = `
+    <table class="table">
+    <thead>
+    <tr>
+        <th>Especialidad</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+
+    citas.forEach(cita => {
+
+        html += `
+        <tr>
+            <td>${cita.especialidad}</td>
+            <td>${cita.fecha}</td>
+            <td>${cita.hora}</td>
+            <td>${cita.estado}</td>
+
+            <td>
+
+            <button
+            class="btn btn-warning btn-sm"
+            onclick="reprogramarCita(${cita.id})">
+            Reprogramar
+            </button>
+
+            <button
+            class="btn btn-danger btn-sm"
+            onclick="cancelarCita(${cita.id})">
+            Cancelar
+            </button>
+
+            </td>
+        </tr>
+        `;
+
+    });
+
+    html += `
+    </tbody>
+    </table>
+    `;
+
+    document.getElementById(
+        'listaCitas'
+    ).innerHTML = html;
+
+}
     if(!sesion){
         alert('Debe iniciar sesión');
         return;
@@ -394,7 +452,10 @@ document.getElementById('horaAgendar').value);
 
         if(resultado.success){
 
-            alert('Cita registrada correctamente');
+    alert('Cita registrada correctamente');
+
+    cargarCitas();
+
 
             document.getElementById('fechaAgendar').value = '';
             document.getElementById('horaAgendar').value = '';
@@ -450,6 +511,7 @@ document.getElementById('horaAgendar').value);
         );
 
         alert('Bienvenido ' + resultado.usuario.nombre);
+        cargarCitas();
 
         location.reload();
 
@@ -568,12 +630,149 @@ document.getElementById('horaAgendar').value);
     }
 
     // Inicializar
-    renderCitas();
+    cargarCitas();
     if(sesionActiva) {
       const btn = document.querySelector('[data-target="auth"]');
       btn.textContent = 'Cerrar Sesión';
       btn.onclick = () => { localStorage.removeItem('sesion'); location.reload(); };
     }
+    //cargar citas 
+    async function cargarCitas(){
+
+    const sesion =
+    JSON.parse(localStorage.getItem('sesion'));
+
+    if(!sesion) return;
+
+    const respuesta =
+    await fetch(
+        `backend/listar_citas.php?cedula=${sesion.cedula}`
+    );
+
+    const citas =
+    await respuesta.json();
+
+    let html = `
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Especialidad</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+
+    citas.forEach(cita => {
+
+        html += `
+  
+            <tr>
+    <td>${cita.especialidad}</td>
+    <td>${cita.fecha}</td>
+    <td>${cita.hora}</td>
+    <td>${cita.estado}</td>
+
+    <td>
+
+      <button
+      class="btn btn-warning btn-sm"
+      onclick="reprogramarCita(${cita.id})">
+      Reprogramar
+      </button>
+
+      <button
+      class="btn btn-danger btn-sm"
+      onclick="cancelarCita(${cita.id})">
+      Cancelar
+      </button>
+
+    </td>
+
+</tr>
+        `;
+
+    });
+
+    html += `
+        </tbody>
+    </table>
+    `;
+
+    document.getElementById(
+        'listaCitas'
+    ).innerHTML = html;
+}
+window.reprogramarCita = async function(id){
+
+    const fecha = prompt("Nueva fecha (YYYY-MM-DD)");
+    const hora = prompt("Nueva hora (HH:MM)");
+
+    if(!fecha || !hora) return;
+
+    const formData = new FormData();
+
+    formData.append("id", id);
+    formData.append("fecha", fecha);
+    formData.append("hora", hora);
+
+    const respuesta = await fetch(
+        "backend/reprogramar_cita.php",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const resultado = await respuesta.json();
+
+    if(resultado.success){
+
+        alert("Cita reprogramada");
+        cargarCitas();
+
+    }else{
+
+        alert(resultado.error);
+
+    }
+
+};
+
+window.cancelarCita = async function(id){
+
+    if(!confirm("¿Cancelar esta cita?")){
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("id", id);
+
+    const respuesta = await fetch(
+        "backend/cancelar_cita.php",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const resultado = await respuesta.json();
+
+    if(resultado.success){
+
+        alert("Cita cancelada");
+        cargarCitas();
+
+    }else{
+
+        alert(resultado.error);
+
+    }
+
+};
   </script>
 </body>
 </html>
