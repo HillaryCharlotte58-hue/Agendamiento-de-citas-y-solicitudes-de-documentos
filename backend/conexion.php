@@ -1,14 +1,13 @@
 <?php
 
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "Agendar_Citas";
+$host = "sql311.infinityfree.com";
+$user = "if0_42181811";
+$password = "8QnJjJtuQMGm";
+$database = "if0_42181811_agendar_citas";
 
+$conexion = mysqli_connect($host, $user, $password, $database);
 
-$conexion = mysqli_connect("localhost", "root", "", "agendar_citas");
-
-if(!$conexion){
+if (!$conexion) {
     die("Error de conexión: " . mysqli_connect_error());
 }
 ?>
